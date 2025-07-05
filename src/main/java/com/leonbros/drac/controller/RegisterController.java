@@ -1,6 +1,7 @@
 package com.leonbros.drac.controller;
 
 import com.leonbros.drac.dto.request.UserRegistrationRequest;
+import com.leonbros.drac.dto.response.TotpRequestResponse;
 import com.leonbros.drac.dto.response.UserRegistrationResponse;
 import com.leonbros.drac.entity.User;
 import com.leonbros.drac.service.UserService;
@@ -17,13 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/api/users")
-public class UserController {
+@RequestMapping("/api/users/register")
+public class RegisterController {
 
   private final UserService userService;
 
   @Autowired
-  public UserController(UserService userService) {
+  public RegisterController(UserService userService) {
     this.userService = userService;
   }
 
@@ -32,13 +33,21 @@ public class UserController {
     return userService.emailExists(email);
   }
 
-  @PostMapping(value = "register", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "persist", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<UserRegistrationResponse> register(
       @RequestBody UserRegistrationRequest userRegistrationRequest) {
     final User user = userService.registerUser(userRegistrationRequest);
     final UserRegistrationResponse userRegistrationResponse =
         new UserRegistrationResponse(user.getEmail());
     return ResponseEntity.ok(userRegistrationResponse);
+  }
+
+  @PostMapping(value = "totp", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<TotpRequestResponse> requestTotp(
+      @RequestBody UserRegistrationRequest userRegistrationRequest) {
+    final TotpRequestResponse response =
+        new TotpRequestResponse(userService.requestTotp(userRegistrationRequest));
+    return ResponseEntity.ok(response);
   }
 
 }

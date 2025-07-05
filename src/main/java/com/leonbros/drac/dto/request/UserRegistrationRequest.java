@@ -19,5 +19,7 @@ public class UserRegistrationRequest {
 
   private String telephone;
 
+  private AddressRegistrationRequest address;
+
   private Integer totp;
 }
