@@ -28,7 +28,7 @@ public class RegisterController {
     this.userService = userService;
   }
 
-  @GetMapping("exists/{email}")
+  @GetMapping("email-registered/{email}")
   public boolean userExists(@PathVariable String email) {
     return userService.emailExists(email);
   }
