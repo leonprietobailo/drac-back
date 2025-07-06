@@ -13,5 +13,5 @@ public class AddressRegistrationRequest {
 
   private String flat;
 
-  private String postalCode;
+  private Integer postalCode;
 }

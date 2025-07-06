@@ -1,18 +1,18 @@
 CREATE TABLE ADDRESS
 (
-    cod         BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_cod    BIGINT REFERENCES USERS,
-    city        varchar2(100),
-    province    varchar2(100),
-    street      varchar2(100),
+    cod         BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    user_cod    BIGINT REFERENCES USERS           NOT NULL,
+    city        varchar2(100)                     NOT NULL,
+    province    varchar2(100)                     NOT NULL,
+    street      varchar2(100)                     NOT NULL,
     flat        varchar2(100),
-    postal_code NUMERIC(5, 0)
+    postal_code NUMERIC(5, 0)                     NOT NULL
 );
 
 CREATE TABLE TOTP
 (
-    cod          BIGINT AUTO_INCREMENT PRIMARY KEY,
-    email        VARCHAR2(100) UNIQUE,
-    otp          NUMERIC(4, 0),
-    request_date TIMESTAMP
+    cod          BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    email        VARCHAR2(100)                     NOT NULL,
+    otp          NUMERIC(4, 0)                     NOT NULL,
+    request_date TIMESTAMP                         NOT NULL
 );

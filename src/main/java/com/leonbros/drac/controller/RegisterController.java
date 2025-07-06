@@ -1,5 +1,6 @@
 package com.leonbros.drac.controller;
 
+import com.leonbros.drac.dto.request.TotpRequest;
 import com.leonbros.drac.dto.request.UserRegistrationRequest;
 import com.leonbros.drac.dto.response.TotpRequestResponse;
 import com.leonbros.drac.dto.response.UserRegistrationResponse;
@@ -43,10 +44,8 @@ public class RegisterController {
   }
 
   @PostMapping(value = "totp", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<TotpRequestResponse> requestTotp(
-      @RequestBody UserRegistrationRequest userRegistrationRequest) {
-    final TotpRequestResponse response =
-        new TotpRequestResponse(userService.requestTotp(userRegistrationRequest));
+  public ResponseEntity<TotpRequestResponse> requestTotp(@RequestBody TotpRequest request) {
+    final TotpRequestResponse response = new TotpRequestResponse(userService.requestTotp(request));
     return ResponseEntity.ok(response);
   }
 

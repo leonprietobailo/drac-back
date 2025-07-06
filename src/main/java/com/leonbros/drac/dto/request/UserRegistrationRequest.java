@@ -17,7 +17,7 @@ public class UserRegistrationRequest {
 
   private Date birthdate;
 
-  private String telephone;
+  private String phone;
 
   private AddressRegistrationRequest address;
 

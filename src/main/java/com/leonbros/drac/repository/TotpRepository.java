@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface TotpRepository extends JpaRepository<Totp, Long> {
   boolean existsTotpByEmail(String email);
   Optional<Totp> findTopByEmail(String email);
+
+  List<Totp> findTotpsByEmail(String email);
 }

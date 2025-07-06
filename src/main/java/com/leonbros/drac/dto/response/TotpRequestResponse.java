@@ -7,6 +7,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public class TotpRequestResponse {
 
-  public boolean success;
+  public Status status;
+
+  public enum Status {
+    SUCCESS,
+    TOO_MANY_TOTPS,
+    UNEXPECTED_ERROR
+  }
 
 }
