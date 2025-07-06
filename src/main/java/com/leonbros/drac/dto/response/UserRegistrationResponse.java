@@ -7,6 +7,15 @@ import lombok.Getter;
 @AllArgsConstructor
 public class UserRegistrationResponse {
 
-  private String email;
+  public Status status;
+
+  public enum Status {
+    SUCCESS,
+    WRONG_TOTP,
+    VALIDATION_FAILED,
+    TOTP_EXPIRED,
+    UNEXPECTED_ERROR
+
+  }
 
 }

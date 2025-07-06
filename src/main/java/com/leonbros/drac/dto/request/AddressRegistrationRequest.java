@@ -9,9 +9,9 @@ public class AddressRegistrationRequest {
 
   private String province;
 
-  private String street;
+  private String streetNumber;
 
-  private String flat;
+  private String blockFlat;
 
   private Integer postalCode;
 }

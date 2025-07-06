@@ -37,10 +37,9 @@ public class RegisterController {
   @PostMapping(value = "persist", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<UserRegistrationResponse> register(
       @RequestBody UserRegistrationRequest userRegistrationRequest) {
-    final User user = userService.registerUser(userRegistrationRequest);
-    final UserRegistrationResponse userRegistrationResponse =
-        new UserRegistrationResponse(user.getEmail());
-    return ResponseEntity.ok(userRegistrationResponse);
+    final UserRegistrationResponse response =
+        new UserRegistrationResponse(userService.registerUser(userRegistrationRequest));
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping(value = "totp", produces = MediaType.APPLICATION_JSON_VALUE)

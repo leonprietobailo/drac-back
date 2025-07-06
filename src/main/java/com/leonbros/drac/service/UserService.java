@@ -1,10 +1,14 @@
 package com.leonbros.drac.service;
 
+import com.leonbros.drac.dto.request.AddressRegistrationRequest;
 import com.leonbros.drac.dto.request.TotpRequest;
 import com.leonbros.drac.dto.request.UserRegistrationRequest;
 import com.leonbros.drac.dto.response.TotpRequestResponse;
+import com.leonbros.drac.dto.response.UserRegistrationResponse;
+import com.leonbros.drac.entity.Address;
 import com.leonbros.drac.entity.Totp;
 import com.leonbros.drac.entity.User;
+import com.leonbros.drac.repository.AddressRepository;
 import com.leonbros.drac.repository.TotpRepository;
 import com.leonbros.drac.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -23,10 +27,14 @@ public class UserService {
 
   private final TotpRepository totpRepository;
 
+  private final AddressRepository addressRepository;
+
   @Autowired
-  public UserService(UserRepository userRepository, TotpRepository totpRepository) {
+  public UserService(UserRepository userRepository, TotpRepository totpRepository,
+      AddressRepository addressRepository) {
     this.userRepository = userRepository;
     this.totpRepository = totpRepository;
+    this.addressRepository = addressRepository;
   }
 
   public boolean emailExists(String email) {
@@ -34,15 +42,36 @@ public class UserService {
   }
 
   @Transactional
-  public User registerUser(UserRegistrationRequest user) {
+  public UserRegistrationResponse.Status registerUser(UserRegistrationRequest user) {
     // VALIDATE TOTP
-    final User userEntity = User.builder().email(user.getEmail()).password(user.getPassword())
-        .firstName(user.getFirstName()).lastName(user.getLastName()).birthdate(user.getBirthdate())
-        .telephone(user.getPhone()).build();
+    final List<Totp> totps = totpRepository.findTotpsByEmailOrderByRequestDate(user.getEmail());
+    if (totps.isEmpty()) {
+      return UserRegistrationResponse.Status.UNEXPECTED_ERROR;
+    }
+    final Totp lastTotp = totps.getFirst();
+    final Instant twentyMinutesAgo = Instant.now().minus(Duration.ofMinutes(20));
+    if (lastTotp.getRequestDate().toInstant().isBefore(twentyMinutesAgo)) {
+      return UserRegistrationResponse.Status.TOTP_EXPIRED;
+    }
+    if (!lastTotp.getOtp().equals(user.getTotp())) {
+      return UserRegistrationResponse.Status.WRONG_TOTP;
+    }
+    // Validate User...
+    // Validate Address... -> This will return a validation result that must be used to identify whether the Address is present or not.
 
-    final User savedUser = userRepository.save(userEntity);
-    savedUser.setPassword(user.getPassword());
-    return savedUser;
+    // Persist User
+    final User userEntity =
+        new User(null, user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(),
+            user.getBirthdate(), user.getPhone());
+    final User persistedUser = userRepository.save(userEntity);
+
+    // If Address is present...
+    final AddressRegistrationRequest address = user.getAddress();
+    final Address addressEntity =
+        new Address(null, persistedUser, address.getCity(), address.getProvince(),
+            address.getStreetNumber(), address.getBlockFlat(), address.getPostalCode());
+    addressRepository.save(addressEntity);
+    return UserRegistrationResponse.Status.SUCCESS;
   }
 
   @Transactional
