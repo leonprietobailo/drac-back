@@ -61,7 +61,7 @@ public class UserService {
 
     // Persist User
     final User userEntity =
-        new User(null, user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(),
+        new User(null, user.getEmail(), user.getPassword(), user.getNewsletter(), user.getFirstName(), user.getLastName(),
             user.getBirthdate(), user.getPhone());
     final User persistedUser = userRepository.save(userEntity);
 
@@ -87,7 +87,7 @@ public class UserService {
     }
     // Create new TOTP
     final Totp totp =
-        Totp.builder().email(request.getEmail()).requestDate(new Date()).otp(9999).build();
+        Totp.builder().email(request.getEmail()).requestDate(new Date()).otp("9999").build();
     totpRepository.save(totp);
     // TODO: Generate Corresponding Email.
     return TotpRequestResponse.Status.SUCCESS;

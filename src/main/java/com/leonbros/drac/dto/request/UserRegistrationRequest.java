@@ -11,6 +11,8 @@ public class UserRegistrationRequest {
 
   private String password;
 
+  private Boolean newsletter;
+
   private String firstName;
 
   private String lastName;
@@ -19,7 +21,7 @@ public class UserRegistrationRequest {
 
   private String phone;
 
-  private Integer totp;
+  private String totp;
 
   private AddressRegistrationRequest address;
 

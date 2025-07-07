@@ -30,6 +30,8 @@ public class User {
 
   private String password;
 
+  private Boolean newsletter;
+
   private String firstName;
 
   private String lastName;

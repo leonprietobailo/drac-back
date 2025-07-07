@@ -6,5 +6,6 @@ CREATE TABLE USERS
     first_name varchar2(50)                      NOT NULL,
     last_name  varchar2(50)                      NOT NULL,
     birthdate  timestamp                         NOT NULL,
-    telephone  varchar2(20)
+    telephone  varchar2(20),
+    newsletter boolean                           NOT NULL
 )

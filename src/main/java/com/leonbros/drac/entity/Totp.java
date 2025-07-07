@@ -31,7 +31,7 @@ public class Totp {
 
   private String email;
 
-  private Integer otp;
+  private String otp;
 
   private Date requestDate;
 
