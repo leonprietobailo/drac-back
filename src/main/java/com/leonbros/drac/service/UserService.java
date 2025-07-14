@@ -5,6 +5,7 @@ import com.leonbros.drac.dto.request.TotpRequest;
 import com.leonbros.drac.dto.request.UserRegistrationRequest;
 import com.leonbros.drac.dto.response.TotpRequestResponse;
 import com.leonbros.drac.dto.response.UserRegistrationResponse;
+import com.leonbros.drac.dto.validation.AddressGroupValidation;
 import com.leonbros.drac.entity.Address;
 import com.leonbros.drac.entity.Totp;
 import com.leonbros.drac.entity.User;
@@ -56,21 +57,20 @@ public class UserService {
     if (!lastTotp.getOtp().equals(user.getTotp())) {
       return UserRegistrationResponse.Status.WRONG_TOTP;
     }
-    // Validate User...
-    // Validate Address... -> This will return a validation result that must be used to identify whether the Address is present or not.
-
     // Persist User
     final User userEntity =
-        new User(null, user.getEmail(), user.getPassword(), user.getNewsletter(), user.getFirstName(), user.getLastName(),
-            user.getBirthdate(), user.getPhone());
+        new User(null, user.getEmail(), user.getPassword(), user.getNewsletter(),
+            user.getFirstName(), user.getLastName(), user.getBirthdate(), user.getPhone());
     final User persistedUser = userRepository.save(userEntity);
 
-    // If Address is present...
+    // Address being present.
     final AddressRegistrationRequest address = user.getAddress();
-    final Address addressEntity =
-        new Address(null, persistedUser, address.getCity(), address.getProvince(),
-            address.getStreetNumber(), address.getBlockFlat(), address.getPostalCode());
-    addressRepository.save(addressEntity);
+    if (!AddressGroupValidation.isEmptyAddress(address)) {
+      final Address addressEntity =
+          new Address(null, persistedUser, address.getCity(), address.getProvince(),
+              address.getStreetNumber(), address.getBlockFlat(), address.getPostalCode());
+      addressRepository.save(addressEntity);
+    }
     return UserRegistrationResponse.Status.SUCCESS;
   }
 

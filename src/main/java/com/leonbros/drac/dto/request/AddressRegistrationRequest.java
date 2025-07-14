@@ -1,8 +1,11 @@
 package com.leonbros.drac.dto.request;
 
+import com.leonbros.drac.dto.validation.annotations.AddressGroup;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
+@AddressGroup
 public class AddressRegistrationRequest {
 
   private String city;
@@ -13,5 +16,5 @@ public class AddressRegistrationRequest {
 
   private String blockFlat;
 
-  private Integer postalCode;
+  private String postalCode;
 }

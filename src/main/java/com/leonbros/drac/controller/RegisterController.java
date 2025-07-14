@@ -6,6 +6,7 @@ import com.leonbros.drac.dto.response.TotpRequestResponse;
 import com.leonbros.drac.dto.response.UserRegistrationResponse;
 import com.leonbros.drac.entity.User;
 import com.leonbros.drac.service.UserService;
+import jakarta.validation.Valid;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -36,7 +37,7 @@ public class RegisterController {
 
   @PostMapping(value = "persist", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<UserRegistrationResponse> register(
-      @RequestBody UserRegistrationRequest userRegistrationRequest) {
+      @Valid @RequestBody UserRegistrationRequest userRegistrationRequest) {
     final UserRegistrationResponse response =
         new UserRegistrationResponse(userService.registerUser(userRegistrationRequest));
     return ResponseEntity.ok(response);

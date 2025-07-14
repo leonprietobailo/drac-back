@@ -6,7 +6,7 @@ CREATE TABLE ADDRESS
     province    varchar2(100)                     NOT NULL,
     street      varchar2(100)                     NOT NULL,
     flat        varchar2(100),
-    postal_code NUMERIC(5, 0)                     NOT NULL
+    postal_code varchar2(5)                       NOT NULL
 );
 
 CREATE TABLE TOTP

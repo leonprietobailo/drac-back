@@ -38,6 +38,6 @@ public class Address {
 
   private String flat;
 
-  private Integer postalCode;
+  private String postalCode;
 
 }
