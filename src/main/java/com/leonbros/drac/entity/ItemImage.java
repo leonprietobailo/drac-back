@@ -1,40 +1,35 @@
 package com.leonbros.drac.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CollectionIdJdbcTypeCode;
-import org.hibernate.annotations.SQLJoinTableRestriction;
 
-import java.util.List;
 @Entity
-@Table(name="ITEM")
+@Table(name="ITEM_IMAGE")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Item {
+public class ItemImage {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long cod;
 
-  private Long itemPosition;
+  private String url;
 
-  private String title;
+  @ManyToOne
+  @JoinColumn(name = "item_attribute_cod")
+  private ItemAttribute itemAttribute;
 
-  private Float price;
-
-  private String description;
-
-  @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<ItemAttribute> itemAttributes;
 }

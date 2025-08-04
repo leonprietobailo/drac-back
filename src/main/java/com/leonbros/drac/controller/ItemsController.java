@@ -1,10 +1,9 @@
 package com.leonbros.drac.controller;
 
-import com.leonbros.drac.dto.response.ItemsResponse;
+import com.leonbros.drac.dto.response.item.ItemsResponse;
 import com.leonbros.drac.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

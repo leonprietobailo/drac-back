@@ -1,4 +1,4 @@
-package com.leonbros.drac.dto.response;
+package com.leonbros.drac.dto.response.item;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,16 +22,9 @@ public class ItemsResponse {
   public static class ItemResponse {
     private Long id;
     private String title;
+    private String description;
     private String  price;
-    private List<ItemColorResponse> colors;
-
-
-    @Getter
-    @AllArgsConstructor
-    public static class ItemColorResponse {
-      private String color;
-      private String url;
-    }
+    private List<AttributeResponse> attributes;
   }
 
 

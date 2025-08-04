@@ -11,30 +11,24 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CollectionIdJdbcTypeCode;
-import org.hibernate.annotations.SQLJoinTableRestriction;
 
 import java.util.List;
+
 @Entity
-@Table(name="ITEM")
+@Table(name="ITEM_SIZE")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Item {
+public class ItemSize {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long cod;
 
-  private Long itemPosition;
+  private String size;
 
-  private String title;
+  @OneToMany(mappedBy = "itemSize", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<ItemAttribute> itemSizes;
 
-  private Float price;
-
-  private String description;
-
-  @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<ItemAttribute> itemAttributes;
 }
