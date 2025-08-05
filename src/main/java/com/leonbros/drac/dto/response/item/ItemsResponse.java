@@ -10,11 +10,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class ItemsResponse {
-
   private Status status;
-
   private List<ItemResponse> items;
-
 
   @Getter
   @Builder
@@ -24,9 +21,10 @@ public class ItemsResponse {
     private String title;
     private String description;
     private String  price;
-    private List<AttributeResponse> attributes;
+    private List<ItemColorResponse> colors;
+    private List<ItemSizeResponse> sizes;
+    private List<ItemImageResponse> images;
   }
-
 
   public enum Status {
     SUCCESS, UNEXPECTED_ERROR

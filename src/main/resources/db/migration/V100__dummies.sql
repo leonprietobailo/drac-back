@@ -21,94 +21,132 @@ VALUES (1, 'ITEM #1', 6.25, 'A basic entry-level item, perfect for starters.'),
        (12, 'ITEM #12', 20.0, 'The ultimate item in this series with maximum performance.');
 
 
-INSERT INTO ITEM_COLOR (color) VALUES ('#FF5733');
-INSERT INTO ITEM_COLOR (color) VALUES ('#33FF57');
-INSERT INTO ITEM_COLOR (color) VALUES ('#3357FF');
-INSERT INTO ITEM_COLOR (color) VALUES ('#FFFF00');
-INSERT INTO ITEM_COLOR (color) VALUES ('#FF33FF');
-INSERT INTO ITEM_SIZE (size) VALUES ('XXS');
-INSERT INTO ITEM_SIZE (size) VALUES ('XS');
-INSERT INTO ITEM_SIZE (size) VALUES ('S');
-INSERT INTO ITEM_SIZE (size) VALUES ('M');
-INSERT INTO ITEM_SIZE (size) VALUES ('L');
-INSERT INTO ITEM_SIZE (size) VALUES ('XL');
-INSERT INTO ITEM_SIZE (size) VALUES ('XXL');
+INSERT INTO COLOR (color) VALUES ('#FF5733'); -- 1
+INSERT INTO COLOR (color) VALUES ('#33FF57'); -- 2
+INSERT INTO COLOR (color) VALUES ('#3357FF'); -- 3
+INSERT INTO COLOR (color) VALUES ('#FFFF00'); -- 4
+INSERT INTO COLOR (color) VALUES ('#FF33FF'); -- 5
+INSERT INTO SIZE (size) VALUES ('XXS'); -- 1
+INSERT INTO SIZE (size) VALUES ('XS'); -- 2
+INSERT INTO SIZE (size) VALUES ('S'); -- 3
+INSERT INTO SIZE (size) VALUES ('M'); -- 4
+INSERT INTO SIZE (size) VALUES ('L'); -- 5
+INSERT INTO SIZE (size) VALUES ('XL'); -- 6
+INSERT INTO SIZE (size) VALUES ('XXL'); -- 7
 
--- ITEM 1 has 3 colors (3, 4, 5)
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (1, 3, NULL);
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (1, 4, NULL);
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (1, 5, NULL);
+-- ITEM 1 has 3 colors
+INSERT INTO ITEM_COLOR(color_cod, item_cod) VALUES (1, 1);
+INSERT INTO ITEM_COLOR(color_cod, item_cod) VALUES (2, 1);
+INSERT INTO ITEM_COLOR(color_cod, item_cod) VALUES (3, 1);
 
--- ITEM 2 has 2 colors (1, 2)
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (2, NULL, NULL);
+-- ITEM 2 HAS 2 COLORS, 3 SIZES.
+INSERT INTO ITEM_COLOR(color_cod, item_cod) VALUES (4, 2);
+INSERT INTO ITEM_COLOR(color_cod, item_cod) VALUES (5, 2);
+INSERT INTO ITEM_SIZE(size_cod, item_cod) VALUES (2, 2);
+INSERT INTO ITEM_SIZE(size_cod, item_cod) VALUES (3, 2);
+INSERT INTO ITEM_SIZE(size_cod, item_cod) VALUES (4, 2);
+INSERT INTO ITEM_SIZE(size_cod, item_cod) VALUES (5, 2);
 
--- ITEM 3 already had 3 colors (3, 4, 5) – preserved
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (3, 3, 2);
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (3, 3, 3);
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (3, 3, 4);
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (3, 4, 2);
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (3, 4, 3);
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (3, 4, 4);
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (3, 5, 2);
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (3, 5, 3);
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (3, 5, 4);
+-- ITEM 3 HAS ALL SIZES.
+INSERT INTO ITEM_SIZE(size_cod, item_cod) VALUES (1, 3);
+INSERT INTO ITEM_SIZE(size_cod, item_cod) VALUES (2, 3);
+INSERT INTO ITEM_SIZE(size_cod, item_cod) VALUES (3, 3);
+INSERT INTO ITEM_SIZE(size_cod, item_cod) VALUES (4, 3);
+INSERT INTO ITEM_SIZE(size_cod, item_cod) VALUES (5, 3);
+INSERT INTO ITEM_SIZE(size_cod, item_cod) VALUES (6, 3);
+INSERT INTO ITEM_SIZE(size_cod, item_cod) VALUES (7, 3);
 
--- ITEM 4 now has 4 colors (1 to 4)
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (4, 1, NULL);
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (4, 2, NULL);
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (4, 3, NULL);
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (4, 4, NULL);
+-- ITEM 4-12 HAVE NO COLORS NOR SIZES.
 
--- ITEM 5 remains single-color (1) → NULL
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (5, NULL, NULL);
-
--- ITEM 6 now has 5 colors (1 to 5)
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (6, NULL, NULL);
-
--- ITEM 7 now has 2 colors (2, 3)
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (7, NULL, NULL);
-
--- ITEM 8 now has 3 colors (3, 4, 5)
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (8, NULL, NULL);
-
--- ITEM 9 remains without color → NULL
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (9, NULL, NULL);
-
--- ITEM 10 now has 2 colors (4, 5) and no sizes
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (10, NULL, NULL);
-
--- ITEM 11 remains without color/size → NULL
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (11, NULL, NULL);
-
--- ITEM 12 now has 2 colors and size
-INSERT INTO ITEM_ATTRIBUTE (item_cod, item_color_cod, item_size_cod) VALUES (12, NULL, NULL);
-
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/3357FF/ffffff', 1);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/FFFF00/ffffff', 2);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/FF33FF/ffffff', 3);
-
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/3357FF/ffffff', 5);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/3357FF/ffffff', 6);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/3357FF/ffffff', 7);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/FFFF00/ffffff', 8);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/FFFF00/ffffff', 9);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/FFFF00/ffffff', 10);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/FF33FF/ffffff', 11);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/FF33FF/ffffff', 12);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/FF33FF/ffffff', 13);
-
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/FF5733/ffffff', 14);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/33FF57/ffffff', 15);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/3357FF/ffffff', 16);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/FFFF00/ffffff', 17);
+-- ITEM 1, COLOR 1
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/FF5733/33FF57', 1, 1);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/FF5733/3357FF', 1, 1);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/FF5733/FFFF00', 1, 1);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/FF5733/FF33FF', 1, 1);
+-- ITEM 1, COLOR 2
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/33FF57/FF5733', 2, 1);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/33FF57/3357FF', 2, 1);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/33FF57/FFFF00', 2, 1);
+-- ITEM 1, COLOR 3
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/3357FF/FF5733', 3, 1);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/3357FF/1A2B3C', 3, 1);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/3357FF/A1B2C3', 3, 1);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/3357FF/DDEEFF', 3, 1);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/3357FF/123456', 3, 1);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/3357FF/ABCDEF', 3, 1);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/3357FF/765432', 3, 1);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/3357FF/DEAD55', 3, 1);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/3357FF/C0FFEE', 3, 1);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/3357FF/BADA55', 3, 1);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/3357FF/7A1CEB', 3, 1);
 
 
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', 4);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', 18);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', 19);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', 20);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', 21);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', 22);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', 23);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', 24);
-INSERT INTO ITEM_IMAGE (url, item_attribute_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', 25);
+-- ITEM 2, COLOR 1
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/FFFF00/33FF57', 4, 2);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/FFFF00/3357FF', 4, 2);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/FFFF00/FF5733', 4, 2);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/FFFF00/FF33FF', 4, 2);
+-- ITEM 2, COLOR 2
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/FF33FF/FF5733', 5, 2);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/FF33FF/3357FF', 5, 2);
+INSERT INTO ITEM_IMAGE(url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/FF33FF/FFFF00', 5, 2);
+
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', NULL, 3);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF33FF', NULL, 3);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FFFF00', NULL, 3);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF5733', NULL, 3);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/3357FF', NULL, 3);
+
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', NULL, 4);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF33FF', NULL, 4);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FFFF00', NULL, 4);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF5733', NULL, 4);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/3357FF', NULL, 4);
+
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', NULL, 5);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF33FF', NULL, 5);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FFFF00', NULL, 5);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF5733', NULL, 5);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/3357FF', NULL, 5);
+
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', NULL, 6);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF33FF', NULL, 6);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FFFF00', NULL, 6);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF5733', NULL, 6);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/3357FF', NULL, 6);
+
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', NULL, 7);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF33FF', NULL, 7);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FFFF00', NULL, 7);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF5733', NULL, 7);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/3357FF', NULL, 7);
+
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', NULL, 8);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF33FF', NULL, 8);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FFFF00', NULL, 8);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF5733', NULL, 8);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/3357FF', NULL, 8);
+
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', NULL, 9);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF33FF', NULL, 9);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FFFF00', NULL, 9);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF5733', NULL, 9);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/3357FF', NULL, 9);
+
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', NULL, 10);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF33FF', NULL, 10);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FFFF00', NULL, 10);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF5733', NULL, 10);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/3357FF', NULL, 10);
+
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', NULL, 11);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF33FF', NULL, 11);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FFFF00', NULL, 11);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF5733', NULL, 11);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/3357FF', NULL, 11);
+
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/ffffff', NULL, 12);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF33FF', NULL, 12);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FFFF00', NULL, 12);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/FF5733', NULL, 12);
+INSERT INTO ITEM_IMAGE (url, color_cod, item_cod) VALUES ('https://dummyimage.com/195x195/000/3357FF', NULL, 12);

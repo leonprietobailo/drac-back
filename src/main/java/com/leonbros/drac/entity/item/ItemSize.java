@@ -1,43 +1,39 @@
-package com.leonbros.drac.entity;
+package com.leonbros.drac.entity.item;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.util.List;
 
 @Entity
-@Table(name = "USERS")
+@Table(name="ITEM_SIZE")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class ItemSize {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long cod;
 
-  private String email;
+  @ManyToOne
+  @JoinColumn(name = "size_cod")
+  private Size size;
 
-  private String password;
-
-  private Boolean newsletter;
-
-  private String firstName;
-
-  private String lastName;
-
-  private Date birthdate;
-
-  private String telephone;
+  @ManyToOne
+  @JoinColumn(name = "item_cod")
+  private Item item;
 
 }

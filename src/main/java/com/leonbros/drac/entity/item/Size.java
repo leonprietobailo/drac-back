@@ -1,35 +1,36 @@
-package com.leonbros.drac.entity;
+package com.leonbros.drac.entity.item;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
-@Table(name="ITEM_IMAGE")
+@Table(name="SIZE")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemImage {
+public class Size {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long cod;
 
-  private String url;
+  private String size;
 
-  @ManyToOne
-  @JoinColumn(name = "item_attribute_cod")
-  private ItemAttribute itemAttribute;
+  @OneToMany(mappedBy = "size", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<ItemSize> itemSizes;
 
 }
+
+

@@ -1,12 +1,9 @@
-package com.leonbros.drac.entity;
-
+package com.leonbros.drac.entity.user;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,13 +14,13 @@ import lombok.Setter;
 import java.util.Date;
 
 @Entity
-@Table(name = "TOTP")
+@Table(name = "USERS")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Totp {
+public class User {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,8 +28,16 @@ public class Totp {
 
   private String email;
 
-  private String otp;
+  private String password;
 
-  private Date requestDate;
+  private Boolean newsletter;
+
+  private String firstName;
+
+  private String lastName;
+
+  private Date birthdate;
+
+  private String telephone;
 
 }

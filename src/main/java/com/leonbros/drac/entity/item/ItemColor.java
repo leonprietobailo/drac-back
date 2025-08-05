@@ -1,4 +1,4 @@
-package com.leonbros.drac.entity;
+package com.leonbros.drac.entity.item;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -17,30 +17,23 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(name="ITEM_ATTRIBUTE")
+@Table(name="ITEM_COLOR")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemAttribute {
+public class ItemColor {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long cod;
 
   @ManyToOne
+  @JoinColumn(name = "color_cod")
+  private Color color;
+
+  @ManyToOne
   @JoinColumn(name = "item_cod")
   private Item item;
-
-  @ManyToOne
-  @JoinColumn(name = "item_color_cod")
-  private ItemColor itemColor;
-
-  @ManyToOne
-  @JoinColumn(name = "item_size_cod")
-  private ItemSize itemSize;
-
-  @OneToMany(mappedBy = "itemAttribute", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<ItemImage> itemImages;
 
 }

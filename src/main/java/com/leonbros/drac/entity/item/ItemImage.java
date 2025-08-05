@@ -1,4 +1,4 @@
-package com.leonbros.drac.entity;
+package com.leonbros.drac.entity.item;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,36 +8,30 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "ADDRESS")
+@Table(name="ITEM_IMAGE")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Address {
+public class ItemImage {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long cod;
 
+  private String url;
+
   @ManyToOne
-  @JoinColumn(name = "user_cod")
-  private User userCod;
+  @JoinColumn(name = "item_cod")
+  private Item item;
 
-  private String city;
-
-  private String province;
-
-  private String street;
-
-  private String flat;
-
-  private String postalCode;
+  @ManyToOne
+  @JoinColumn(name = "color_cod")
+  private Color color;
 
 }

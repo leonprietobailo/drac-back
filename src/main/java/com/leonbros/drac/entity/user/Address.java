@@ -1,34 +1,43 @@
-package com.leonbros.drac.entity;
+package com.leonbros.drac.entity.user;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Entity
-@Table(name="ITEM_SIZE")
+@Table(name = "ADDRESS")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemSize {
+public class Address {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long cod;
 
-  private String size;
+  @ManyToOne
+  @JoinColumn(name = "user_cod")
+  private User userCod;
 
-  @OneToMany(mappedBy = "itemSize", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<ItemAttribute> itemSizes;
+  private String city;
+
+  private String province;
+
+  private String street;
+
+  private String flat;
+
+  private String postalCode;
 
 }

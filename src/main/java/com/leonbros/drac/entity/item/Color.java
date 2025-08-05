@@ -1,4 +1,4 @@
-package com.leonbros.drac.entity;
+package com.leonbros.drac.entity.item;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -11,30 +11,27 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CollectionIdJdbcTypeCode;
-import org.hibernate.annotations.SQLJoinTableRestriction;
 
 import java.util.List;
+
 @Entity
-@Table(name="ITEM")
+@Table(name="COLOR")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Item {
+public class Color {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long cod;
 
-  private Long itemPosition;
+  private String color;
 
-  private String title;
+  @OneToMany(mappedBy = "color", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<ItemColor> itemColors;
 
-  private Float price;
+  @OneToMany(mappedBy = "color", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<ItemImage> itemImages;
 
-  private String description;
-
-  @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<ItemAttribute> itemAttributes;
 }

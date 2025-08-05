@@ -4,14 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
 @Builder
 @AllArgsConstructor
-public class AttributeResponse {
-
-  private SizeResponse size;
-  private ColorResponse color;
-  private List<UrlResponse> urls;
+public class ItemImageResponse {
+  private String url;
 }
