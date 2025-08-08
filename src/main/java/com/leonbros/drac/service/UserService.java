@@ -14,6 +14,7 @@ import com.leonbros.drac.repository.TotpRepository;
 import com.leonbros.drac.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -30,12 +31,15 @@ public class UserService {
 
   private final AddressRepository addressRepository;
 
+  private final PasswordEncoder passwordEncoder;
+
   @Autowired
   public UserService(UserRepository userRepository, TotpRepository totpRepository,
-      AddressRepository addressRepository) {
+      AddressRepository addressRepository, PasswordEncoder passwordEncoder) {
     this.userRepository = userRepository;
     this.totpRepository = totpRepository;
     this.addressRepository = addressRepository;
+    this.passwordEncoder = passwordEncoder;
   }
 
   public boolean emailExists(String email) {
@@ -59,8 +63,9 @@ public class UserService {
     }
     // Persist User
     final User userEntity =
-        new User(null, user.getEmail(), user.getPassword(), user.getNewsletter(),
-            user.getFirstName(), user.getLastName(), user.getBirthdate(), user.getPhone());
+        new User(null, user.getEmail(), passwordEncoder.encode(user.getPassword()),
+            user.getNewsletter(), user.getFirstName(), user.getLastName(), user.getBirthdate(),
+            user.getPhone());
     final User persistedUser = userRepository.save(userEntity);
 
     // Address being present.
