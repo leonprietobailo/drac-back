@@ -3,19 +3,28 @@ package com.leonbros.drac.controller;
 import com.leonbros.drac.dto.request.auth.LoginRequest;
 import com.leonbros.drac.dto.response.auth.LoginResponse;
 import com.leonbros.drac.security.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 public class LoginController {
@@ -43,5 +52,15 @@ public class LoginController {
     SecurityContextHolder.getContext().setAuthentication(authentication);
     final String token = jwtUtil.generateToken((UserDetails) authentication.getPrincipal());
     return ResponseEntity.ok(new LoginResponse(token));
+  }
+
+  @GetMapping("/verify")
+  public ResponseEntity<?> verify(Principal principal) {
+    if (principal != null) {
+      log.info("User logged as: {}", principal.getName());
+      return ResponseEntity.ok().build();
+    }
+    log.info("User not authenticated.");
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
   }
 }

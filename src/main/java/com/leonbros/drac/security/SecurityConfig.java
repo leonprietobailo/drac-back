@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
@@ -25,12 +26,14 @@ import java.util.List;
 public class SecurityConfig {
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
     http.authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().permitAll())
         .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/", true).permitAll())
         .logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout").permitAll())
         .sessionManagement(session -> session.maximumSessions(1).maxSessionsPreventsLogin(false));
 
+    // Run filter before Anonymous authentication is created.
+    http.addFilterBefore(jwtFilter, AnonymousAuthenticationFilter.class);
     // TODO: WARN: Remove this line for production, H2 is not required.
     http
         .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
