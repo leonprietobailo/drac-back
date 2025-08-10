@@ -36,7 +36,7 @@ public class ItemService {
   private List<ItemsResponse.ItemResponse> computeItems(List<Item> items) {
     final List<ItemsResponse.ItemResponse> result = new ArrayList<>();
     for (Item item : items) {
-      result.add(new ItemsResponse.ItemResponse(item.getItemPosition(), item.getTitle(),
+      result.add(new ItemsResponse.ItemResponse(item.getCod(), item.getItemPosition(), item.getTitle(),
           item.getDescription(), String.format("%.2f", item.getPrice()).replace(".", ","),
           computeColors(item.getItemColors()), computeSizes(item.getItemSizes()),
           computeImages(item.getItemImages())));

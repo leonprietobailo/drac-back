@@ -18,6 +18,7 @@ public class ItemsResponse {
   @AllArgsConstructor
   public static class ItemResponse {
     private Long id;
+    private Long position;
     private String title;
     private String description;
     private String  price;
