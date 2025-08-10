@@ -36,7 +36,7 @@ public class SecurityConfig {
     http.addFilterBefore(jwtFilter, AnonymousAuthenticationFilter.class);
     // TODO: WARN: Remove this line for production, H2 is not required.
     http
-        .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
+//        .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
         .headers(headers -> headers.frameOptions().sameOrigin());
 
     // TODO: WARN: Enable CSRF in production. See if a production configuration is needed to workaround Angular proxy issue.
@@ -82,7 +82,7 @@ public class SecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:10000"));
+    configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:10000", "https://drac.leonprieto.com"));
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(List.of("*"));
     configuration.setAllowCredentials(true);
