@@ -1,5 +1,6 @@
 package com.leonbros.drac.security;
 
+import com.leonbros.drac.repository.BlacklistedJwtRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -12,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -27,15 +29,20 @@ public class JwtFilter extends OncePerRequestFilter {
   private final JwtUtil jwtUtil;
   private final UserDetailsService userDetailsService;
 
+  private final BlacklistedJwtRepository blacklistedJwtRepository;
+
   @Autowired
-  public JwtFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
+  public JwtFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService,
+      BlacklistedJwtRepository blacklistedJwtRepository) {
     this.jwtUtil = jwtUtil;
     this.userDetailsService = userDetailsService;
+    this.blacklistedJwtRepository = blacklistedJwtRepository;
   }
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
+    SecurityContextHolder.clearContext();
     final String authHeader = request.getHeader("Authorization");
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
       filterChain.doFilter(request, response);
@@ -45,7 +52,8 @@ public class JwtFilter extends OncePerRequestFilter {
     try {
       final String username =
           jwtUtil.getUsernameFromToken(token); // make sure this doesn't throw except we catch it
-      if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+      // check blacklisted jwt.
+      if (blacklistedJwtRepository.getBlacklistedJwtByJwt(token).isEmpty() && username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
         // Prefer a validate method that returns boolean (no throws)
         if (jwtUtil.validateToken(token)) {
           UserDetails userDetails = userDetailsService.loadUserByUsername(username);

@@ -5,7 +5,6 @@ import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +38,10 @@ public class JwtUtil {
 
   public String getUsernameFromToken(String token) {
     return jwtParser.parseSignedClaims(token).getPayload().getSubject();
+  }
+
+  public Date getExpirationDateFromToken(String token) {
+    return jwtParser.parseSignedClaims(token).getPayload().getExpiration();
   }
 
   public boolean validateToken(String token) {

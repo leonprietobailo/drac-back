@@ -252,4 +252,8 @@ VALUES ('https://dummyimage.com/195x195/000/3357FF', NULL, 12);
 
 INSERT INTO USERS (email, password, first_name, last_name, birthdate, telephone, newsletter)
  VALUES ('contact@leonprieto.com', '$2a$10$vA6u4xdqcnW28nNDKZT6YuuM0ly90oeTCli5Gow.lmfSRofTWNWrO', 'León Enrique',
-         'Prieto Bailo', '2000-07-30 00:00:00', '634588659', FALSE)
+         'Prieto Bailo', '2000-07-30 00:00:00', '634588659', FALSE);
+
+INSERT INTO USERS (email, password, first_name, last_name, birthdate, telephone, newsletter)
+ VALUES ('bernat.bredemeyer@gmail.com', '$2a$10$gK.A8C42DC9hrIA.12ZUbOXmYq9kLQr0EFWlIcYvDiBiVBDThvm.G', 'Bernat',
+         'Bredemeyer León', '2001-02-19 00:00:00', '656998544', FALSE)

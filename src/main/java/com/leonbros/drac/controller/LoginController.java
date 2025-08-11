@@ -2,11 +2,15 @@ package com.leonbros.drac.controller;
 
 import com.leonbros.drac.dto.request.auth.LoginRequest;
 import com.leonbros.drac.dto.response.auth.LoginResponse;
+import com.leonbros.drac.dto.response.auth.LogoutResponse;
 import com.leonbros.drac.security.JwtUtil;
+import com.leonbros.drac.service.LoginService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,10 +33,14 @@ public class LoginController {
 
   private final JwtUtil jwtUtil;
 
+  private final LoginService loginService;
+
   @Autowired
-  public LoginController(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+  public LoginController(AuthenticationManager authenticationManager, JwtUtil jwtUtil,
+      LoginService loginService) {
     this.authenticationManager = authenticationManager;
     this.jwtUtil = jwtUtil;
+    this.loginService = loginService;
   }
 
   @PostMapping("/login")
@@ -46,9 +54,15 @@ public class LoginController {
     return ResponseEntity.ok(new LoginResponse(token));
   }
 
+  @GetMapping("/logout")
+  public ResponseEntity<LogoutResponse> logout(HttpServletRequest request) {
+    return ResponseEntity.ok(loginService.logout(request));
+  }
+
   @GetMapping("/verify")
   public ResponseEntity<?> verify(Principal principal) {
-    if (principal != null) {
+    final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
       return ResponseEntity.ok().build();
     }
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
