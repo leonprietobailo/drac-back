@@ -3,21 +3,14 @@ package com.leonbros.drac.dto.response.cart;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
 @AllArgsConstructor
-public class CartResponse {
+public class DeleteResponse {
 
-  public Status status;
-  public String subtotal;
-  public String shipment;
-  public String total;
-  public List<CartItemResponse> items;
+  private  Status status;
 
   public enum Status {
     SUCCESS,
     UNEXPECTED_ERROR
   }
-
 }

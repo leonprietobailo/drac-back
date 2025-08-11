@@ -1,15 +1,17 @@
 package com.leonbros.drac.controller;
 
 import com.leonbros.drac.dto.request.cart.AddRequest;
+import com.leonbros.drac.dto.request.cart.DeleteRequest;
 import com.leonbros.drac.dto.response.cart.AddResponse;
 import com.leonbros.drac.dto.response.cart.CartResponse;
+import com.leonbros.drac.dto.response.cart.DeleteResponse;
 import com.leonbros.drac.service.CartService;
-import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,8 +36,15 @@ public class CartController {
 
   @PostMapping(value = "add-item", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<AddResponse> addItem(HttpServletRequest req, HttpServletResponse resp,
-     @RequestBody AddRequest add) {
+      @RequestBody AddRequest add) {
     return ResponseEntity.ok(cartService.addToCart(req, resp, add));
   }
+
+  @DeleteMapping(value = "item")
+  public ResponseEntity<DeleteResponse> deleteItem(HttpServletRequest req, HttpServletResponse resp,
+      @RequestBody DeleteRequest deleteRequest) {
+    return ResponseEntity.ok(cartService.delete(req, resp, deleteRequest));
+  }
+
 
 }

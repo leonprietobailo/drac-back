@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -31,6 +32,10 @@ public class ItemService {
     return new ItemsResponse(ItemsResponse.Status.SUCCESS, computeItems(items));
   }
 
+  public ItemsResponse.ItemResponse getItemById(long id) {
+    return computeItems(Collections.singletonList(itemRepository.getByCod(id))).getFirst();
+  }
+
   private List<ItemsResponse.ItemResponse> computeItems(List<Item> items) {
     final List<ItemsResponse.ItemResponse> result = new ArrayList<>();
     for (Item item : items) {
@@ -45,13 +50,13 @@ public class ItemService {
 
   private static List<ItemColorResponse> computeColors(List<ItemColor> itemColors) {
     return itemColors.stream().map(
-        itemColor -> new ItemColorResponse(itemColor.getCod(), itemColor.getColor().getColor(),
+        itemColor -> new ItemColorResponse(itemColor.getColor().getCod(), itemColor.getColor().getColor(),
             computeImages(itemColor.getColor().getItemImages()))).toList();
   }
 
   private static List<ItemSizeResponse> computeSizes(List<ItemSize> itemSizes) {
     return itemSizes.stream()
-        .map(itemSize -> new ItemSizeResponse(itemSize.getCod(), itemSize.getSize().getSize()))
+        .map(itemSize -> new ItemSizeResponse(itemSize.getSize().getCod(), itemSize.getSize().getSize()))
         .toList();
   }
 

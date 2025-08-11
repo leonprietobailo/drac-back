@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CartItemResponse {
   private Long id;
+  private Long itemId;
   private String url;
   private String title;
   private String selectedColor;
