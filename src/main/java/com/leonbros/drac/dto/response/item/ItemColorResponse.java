@@ -8,6 +8,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class ItemColorResponse {
+  private Long id;
   private String color;
   private List<ItemImageResponse> images;
 }

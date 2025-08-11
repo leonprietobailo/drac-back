@@ -6,5 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class ItemSizeResponse {
+  private Long id;
   private String size;
 }

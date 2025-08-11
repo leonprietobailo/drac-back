@@ -13,7 +13,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
-  CartItem getByCartAndItemAndItemSizeAndItemColor(Cart cart, Item item, ItemSize itemSize, ItemColor itemColor);
-
-  CartItem getByCartAndItemAndSizeAndColor(Cart cart, Item item, Size size, Color color);
+  CartItem getByCartAndItemAndSelectedSizeAndSelectedColor(Cart cart, Item item, Size size, Color color);
 }

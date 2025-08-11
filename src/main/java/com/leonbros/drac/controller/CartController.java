@@ -4,6 +4,7 @@ import com.leonbros.drac.dto.request.cart.AddRequest;
 import com.leonbros.drac.dto.response.cart.AddResponse;
 import com.leonbros.drac.dto.response.cart.CartResponse;
 import com.leonbros.drac.service.CartService;
+import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,13 +28,13 @@ public class CartController {
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<CartResponse> addCart() {
-
+  public ResponseEntity<CartResponse> getCart(HttpServletRequest req, HttpServletResponse resp) {
+    return ResponseEntity.ok(cartService.getCart(req, resp));
   }
 
   @PostMapping(value = "add-item", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<AddResponse> addItem(HttpServletRequest req, HttpServletResponse resp,
-      AddRequest add) {
+     @RequestBody AddRequest add) {
     return ResponseEntity.ok(cartService.addToCart(req, resp, add));
   }
 

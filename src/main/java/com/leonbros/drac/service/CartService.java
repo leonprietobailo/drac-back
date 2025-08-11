@@ -48,8 +48,6 @@ public class CartService {
   private final SizeRepository sizeRepository;
   private final ColorRepository colorRepository;
   private final CartItemRepository cartItemRepository;
-  private final ItemSizeRepository itemSizeRepository;
-  private final ItemColorRepository itemColorRepository;
 
   @Autowired
   public CartService(CartRepository cartRepository, UserRepository userRepository,
@@ -62,24 +60,21 @@ public class CartService {
     this.sizeRepository = sizeRepository;
     this.colorRepository = colorRepository;
     this.cartItemRepository = cartItemRepository;
-    this.itemSizeRepository = itemSizeRepository;
-    this.itemColorRepository = itemColorRepository;
   }
 
   @Transactional
-  public AddResponse addToCart(HttpServletRequest req, HttpServletResponse resp,
-      AddRequest add) {
+  public AddResponse addToCart(HttpServletRequest req, HttpServletResponse resp, AddRequest add) {
     final Cart cart = getOrCreateCart(req, resp);
     final Item item = itemRepository.getByCod(add.getProductId());
     final Size size = sizeRepository.getByCod(add.getSizeId());
     final Color color = colorRepository.getByCod(add.getColorId());
 
     final CartItem cartItem =
-        CartItem.builder().item(item).cart(cart).selectedSize(size).selectedColor(color).quantity(add.getQuantity())
-            .build();
+        CartItem.builder().item(item).cart(cart).selectedSize(size).selectedColor(color)
+            .quantity(add.getQuantity()).build();
 
     final CartItem existingCartItem =
-        cartItemRepository.getByCartAndItemAndSizeAndColor(cart, item, size, color);
+        cartItemRepository.getByCartAndItemAndSelectedSizeAndSelectedColor(cart, item, size, color);
 
     if (existingCartItem != null) {
       existingCartItem.setQuantity(existingCartItem.getQuantity() + add.getQuantity());
@@ -100,15 +95,16 @@ public class CartService {
   private List<CartItemResponse> computeCartItems(List<CartItem> cartItems) {
     final List<CartItemResponse> result = new ArrayList<>();
     for (CartItem item : cartItems) {
-       final List<ItemColor> itemColors
-           = (item.getItem().getItemColors() != null ?
+      final List<ItemColor> itemColors = (item.getItem().getItemColors() != null ?
           item.getItem().getItemColors() :
           Collections.emptyList());
-       final List<ItemSize> itemSizes = item.getItem().getItemColors() != null ?
+      final List<ItemSize> itemSizes = item.getItem().getItemColors() != null ?
           item.getItem().getItemSizes() :
           Collections.emptyList();
-      final List<String> colors = itemColors.stream().map(itemColor -> itemColor.getColor().getColor()).toList();
-      final List<String> sizes = itemSizes.stream().map(itemSize -> itemSize.getSize().getSize()).toList();
+      final List<String> colors =
+          itemColors.stream().map(itemColor -> itemColor.getColor().getColor()).toList();
+      final List<String> sizes =
+          itemSizes.stream().map(itemSize -> itemSize.getSize().getSize()).toList();
       final Long id = item.getCod();
       final String url = item.getItem().getItemImages().stream()
           .filter(itemImage -> itemImage.getColor().equals(item.getSelectedColor())).findFirst()
@@ -118,7 +114,9 @@ public class CartService {
       final String selectedSize = item.getSelectedSize().getSize();
       final int quantity = item.getQuantity();
       final String price = String.format("%.2f", item.getItem().getPrice());
-      result.add(new CartItemResponse(id, url, title, selectedColor, selectedSize, quantity, price, colors, sizes));
+      result.add(
+          new CartItemResponse(id, url, title, selectedColor, selectedSize, quantity, price, colors,
+              sizes));
     }
     return result;
   }

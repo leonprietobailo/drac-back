@@ -1,10 +1,8 @@
 package com.leonbros.drac.service;
 
-import com.leonbros.drac.dto.response.item.ColorResponse;
 import com.leonbros.drac.dto.response.item.ItemColorResponse;
 import com.leonbros.drac.dto.response.item.ItemSizeResponse;
 import com.leonbros.drac.dto.response.item.ItemsResponse;
-import com.leonbros.drac.dto.response.item.SizeResponse;
 import com.leonbros.drac.dto.response.item.ItemImageResponse;
 import com.leonbros.drac.entity.item.Item;
 import com.leonbros.drac.entity.item.ItemColor;
@@ -36,22 +34,24 @@ public class ItemService {
   private List<ItemsResponse.ItemResponse> computeItems(List<Item> items) {
     final List<ItemsResponse.ItemResponse> result = new ArrayList<>();
     for (Item item : items) {
-      result.add(new ItemsResponse.ItemResponse(item.getCod(), item.getItemPosition(), item.getTitle(),
-          item.getDescription(), String.format("%.2f", item.getPrice()).replace(".", ","),
-          computeColors(item.getItemColors()), computeSizes(item.getItemSizes()),
-          computeImages(item.getItemImages())));
+      result.add(
+          new ItemsResponse.ItemResponse(item.getCod(), item.getItemPosition(), item.getTitle(),
+              item.getDescription(), String.format("%.2f", item.getPrice()).replace(".", ","),
+              computeColors(item.getItemColors()), computeSizes(item.getItemSizes()),
+              computeImages(item.getItemImages())));
     }
     return result;
   }
 
   private static List<ItemColorResponse> computeColors(List<ItemColor> itemColors) {
     return itemColors.stream().map(
-        itemColor -> new ItemColorResponse(itemColor.getColor().getColor(),
+        itemColor -> new ItemColorResponse(itemColor.getCod(), itemColor.getColor().getColor(),
             computeImages(itemColor.getColor().getItemImages()))).toList();
   }
 
   private static List<ItemSizeResponse> computeSizes(List<ItemSize> itemSizes) {
-    return itemSizes.stream().map(itemSize -> new ItemSizeResponse(itemSize.getSize().getSize()))
+    return itemSizes.stream()
+        .map(itemSize -> new ItemSizeResponse(itemSize.getCod(), itemSize.getSize().getSize()))
         .toList();
   }
 

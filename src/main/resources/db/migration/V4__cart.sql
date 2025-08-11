@@ -1,7 +1,7 @@
 CREATE TABLE CART
 (
     cod      BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    uuid char(36),
+    token char(36),
     user_cod BIGINT REFERENCES USERS
 );
 

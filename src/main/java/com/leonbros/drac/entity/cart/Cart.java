@@ -25,7 +25,7 @@ import java.util.UUID;
 
 
 @Entity
-@Table(name = "ITEM")
+@Table(name = "CART")
 @Getter
 @Setter
 @NoArgsConstructor
