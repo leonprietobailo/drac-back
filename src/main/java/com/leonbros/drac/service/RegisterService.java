@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class UserService {
+public class RegisterService {
 
   private final UserRepository userRepository;
 
@@ -34,7 +34,7 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserService(UserRepository userRepository, TotpRepository totpRepository,
+  public RegisterService(UserRepository userRepository, TotpRepository totpRepository,
       AddressRepository addressRepository, PasswordEncoder passwordEncoder) {
     this.userRepository = userRepository;
     this.totpRepository = totpRepository;

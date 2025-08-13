@@ -4,7 +4,7 @@ import com.leonbros.drac.dto.request.TotpRequest;
 import com.leonbros.drac.dto.request.UserRegistrationRequest;
 import com.leonbros.drac.dto.response.TotpRequestResponse;
 import com.leonbros.drac.dto.response.UserRegistrationResponse;
-import com.leonbros.drac.service.UserService;
+import com.leonbros.drac.service.RegisterService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,29 +21,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users/register")
 public class RegisterController {
 
-  private final UserService userService;
+  private final RegisterService registerService;
 
   @Autowired
-  public RegisterController(UserService userService) {
-    this.userService = userService;
+  public RegisterController(RegisterService registerService) {
+    this.registerService = registerService;
   }
 
   @GetMapping("email-registered/{email}")
   public boolean userExists(@PathVariable String email) {
-    return userService.emailExists(email);
+    return registerService.emailExists(email);
   }
 
   @PostMapping(value = "persist", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<UserRegistrationResponse> register(
       @Valid @RequestBody UserRegistrationRequest userRegistrationRequest) {
     final UserRegistrationResponse response =
-        new UserRegistrationResponse(userService.registerUser(userRegistrationRequest));
+        new UserRegistrationResponse(registerService.registerUser(userRegistrationRequest));
     return ResponseEntity.ok(response);
   }
 
   @PostMapping(value = "totp", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<TotpRequestResponse> requestTotp(@RequestBody TotpRequest request) {
-    final TotpRequestResponse response = new TotpRequestResponse(userService.requestTotp(request));
+    final TotpRequestResponse response = new TotpRequestResponse(registerService.requestTotp(request));
     return ResponseEntity.ok(response);
   }
 
