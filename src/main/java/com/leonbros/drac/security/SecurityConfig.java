@@ -30,7 +30,7 @@ public class SecurityConfig {
     http.authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().permitAll())
         .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/", true).permitAll())
         .logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout").permitAll())
-        .sessionManagement(session -> session.maximumSessions(1).maxSessionsPreventsLogin(false));
+        .sessionManagement(session -> session.maximumSessions(10).maxSessionsPreventsLogin(false));
 
     // Run filter before Anonymous authentication is created.
     http.addFilterBefore(jwtFilter, AnonymousAuthenticationFilter.class);

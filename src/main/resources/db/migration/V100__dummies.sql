@@ -258,42 +258,33 @@ INSERT INTO USERS (email, password, first_name, last_name, birthdate, telephone,
  VALUES ('bernat.bredemeyer@gmail.com', '$2a$10$gK.A8C42DC9hrIA.12ZUbOXmYq9kLQr0EFWlIcYvDiBiVBDThvm.G', 'Bernat',
          'Bredemeyer León', '2001-02-19 00:00:00', '656998544', FALSE);
 
-INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname, email, telephone, starred) VALUES (
-6, 'León', 'Prieto', 'contact@leonprieto.com', '634588659', true);
-
-INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname, email, telephone, starred) VALUES (
-6, 'León', 'Prieto', 'contact@leonprieto.com', '634588659', true);
-
-INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname, email, telephone, starred) VALUES (
-6, 'León', 'Prieto', 'contact@leonprieto.com', '634588659', true);
-
-INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname, email, telephone, starred) VALUES (
-6, 'León', 'Prieto', 'contact@leonprieto.com', '634588659', true);
-
-INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname, email, telephone, starred) VALUES (
-6, 'León', 'Prieto', 'contact@leonprieto.com', '634588659', true);
-
-INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname, email, telephone, starred) VALUES (
-6, 'León', 'Prieto', 'contact@leonprieto.com', '634588659', true);
-
-INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname, email, telephone, starred) VALUES (
-6, 'León', 'Prieto', 'contact@leonprieto.com', '634588659', true);
-
-INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname, email, telephone, starred) VALUES (
-6, 'León', 'Prieto', 'contact@leonprieto.com', '634588659', true);
-
-INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname, email, telephone, starred) VALUES (
-6, 'León', 'Prieto', 'contact@leonprieto.com', '634588659', true);
-
-INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname, email, telephone, starred) VALUES (
-6, 'León', 'Prieto', 'contact@leonprieto.com', '634588659', true);
-
-INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname, email, telephone, starred) VALUES (
-6, 'León', 'Prieto', 'contact@leonprieto.com', '634588659', true);
-
-INSERT INTO BILLING_INFO(USER_COD, ENTITY_NAME, EMAIL, TAX_ID, STARRED) VALUES (
-6, 'SR. LEON', 'business@leonprieto.com', '00000001A', true
-);
+INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname,  telephone, starred) VALUES (
+6, 'León', 'Prieto',  '634588659', true);
+--
+-- INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname,  telephone, starred) VALUES (
+-- 6, 'León', 'Prieto',  '634588659', true);
+-- INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname,  telephone, starred) VALUES (
+-- 6, 'León', 'Prieto',  '634588659', true);
+-- INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname,  telephone, starred) VALUES (
+-- 6, 'León', 'Prieto',  '634588659', true);
+-- INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname,  telephone, starred) VALUES (
+-- 6, 'León', 'Prieto',  '634588659', true);
+-- INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname,  telephone, starred) VALUES (
+-- 6, 'León', 'Prieto',  '634588659', true);
+-- INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname,  telephone, starred) VALUES (
+-- 6, 'León', 'Prieto',  '634588659', true);
+-- INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname,  telephone, starred) VALUES (
+-- 6, 'León', 'Prieto',  '634588659', true);
+-- INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname,  telephone, starred) VALUES (
+-- 6, 'León', 'Prieto',  '634588659', true);
+-- INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname,  telephone, starred) VALUES (
+-- 6, 'León', 'Prieto',  '634588659', true);
+-- INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname,  telephone, starred) VALUES (
+-- 6, 'León', 'Prieto',  '634588659', true);
+-- INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname,  telephone, starred) VALUES (
+-- 6, 'León', 'Prieto',  '634588659', true);
+-- INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname,  telephone, starred) VALUES (
+-- 6, 'León', 'Prieto',  '634588659', true);
 
 INSERT INTO ADDRESS(USER_COD, CITY, PROVINCE, STREET, FLAT, POSTAL_CODE) VALUES
 (6, 'Can Trabal', 'Barcelona', 'Carrer Sant Pere de Ribes 148', NULL, '08734');

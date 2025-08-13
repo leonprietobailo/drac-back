@@ -34,8 +34,6 @@ public class Recipient {
 
   private String surname;
 
-  private String email;
-
   private String telephone;
 
   @Builder.Default
