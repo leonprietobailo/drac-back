@@ -2,6 +2,8 @@ package com.leonbros.drac.controller;
 
 import com.leonbros.drac.dto.response.user.AddressDto;
 import com.leonbros.drac.dto.response.user.AddressResponse;
+import com.leonbros.drac.dto.response.user.BillingInfoDto;
+import com.leonbros.drac.dto.response.user.BillingResponse;
 import com.leonbros.drac.dto.response.user.RecipientDto;
 import com.leonbros.drac.dto.response.user.RecipientResponse;
 import com.leonbros.drac.dto.response.user.ShippingResponse;
@@ -39,6 +41,11 @@ public class UsersController {
   @PostMapping(value = "/address")
   public ResponseEntity<AddressResponse> addAddress(@RequestBody AddressDto addressDto) {
     return ResponseEntity.ok(checkoutService.addAddress(addressDto));
+  }
+
+  @PostMapping(value = "/billing")
+  public ResponseEntity<BillingResponse> addAddress(@RequestBody BillingInfoDto billingInfoDto) {
+    return ResponseEntity.ok(checkoutService.addBilling(billingInfoDto));
   }
 
 }

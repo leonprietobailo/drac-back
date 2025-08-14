@@ -3,10 +3,12 @@ package com.leonbros.drac.service.user;
 import com.leonbros.drac.dto.response.user.AddressDto;
 import com.leonbros.drac.dto.response.user.AddressResponse;
 import com.leonbros.drac.dto.response.user.BillingInfoDto;
+import com.leonbros.drac.dto.response.user.BillingResponse;
 import com.leonbros.drac.dto.response.user.RecipientDto;
 import com.leonbros.drac.dto.response.user.RecipientResponse;
 import com.leonbros.drac.dto.response.user.ShippingResponse;
 import com.leonbros.drac.entity.user.Address;
+import com.leonbros.drac.entity.user.BillingInfo;
 import com.leonbros.drac.entity.user.Recipient;
 import com.leonbros.drac.entity.user.User;
 import com.leonbros.drac.repository.AddressRepository;
@@ -80,6 +82,20 @@ public class CheckoutService {
     final Address persistedAddress = addressRepository.save(address);
     addressDto.setId(persistedAddress.getCod());
     return new AddressResponse(AddressResponse.Status.SUCCESS, addressDto);
+  }
+
+  @Transactional
+  public BillingResponse addBilling(BillingInfoDto  billingInfoDto) {
+    final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (!AuthUtils.isUserAuthenticated(auth)) {
+      return new BillingResponse(BillingResponse.Status.UNAUTHORIZED, null);
+    }
+    final User user = userRepository.getUserByEmail(auth.getName()).orElseThrow();
+    final BillingInfo billingInfo = new BillingInfo(null, user, billingInfoDto.getEntityName(),
+        billingInfoDto.getEmail(), billingInfoDto.getTaxId(), false);
+    final BillingInfo persistedBillingInfo = billingInfoRepository.save(billingInfo);
+    billingInfoDto.setId(persistedBillingInfo.getCod());
+    return new BillingResponse(BillingResponse.Status.SUCCESS, billingInfoDto);
   }
 
   private List<AddressDto> computeAddressDto(Authentication auth) {
