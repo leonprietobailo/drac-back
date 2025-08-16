@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BillingInfoDto {
+  private final String type = this.getClass().getSimpleName();
   private Long id;
   private String entityName;
   private String email;

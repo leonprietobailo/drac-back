@@ -6,6 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class RecipientDto {
+  private final String type = this.getClass().getSimpleName();
   private Long id;
   private String name;
   private String surname;
