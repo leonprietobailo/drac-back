@@ -1,5 +1,7 @@
 package com.leonbros.drac.controller;
 
+import com.leonbros.drac.dto.request.checkout.RequestPaymentDto;
+import com.leonbros.drac.dto.response.checkout.RequestPaymentResponse;
 import com.leonbros.drac.dto.response.user.AddressDto;
 import com.leonbros.drac.dto.response.user.AddressResponse;
 import com.leonbros.drac.dto.response.user.BillingInfoDto;
@@ -8,6 +10,7 @@ import com.leonbros.drac.dto.response.user.RecipientDto;
 import com.leonbros.drac.dto.response.user.RecipientResponse;
 import com.leonbros.drac.dto.response.user.ShippingResponse;
 import com.leonbros.drac.service.user.CheckoutService;
+import com.leonbros.drac.service.user.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +27,10 @@ public class CheckoutController {
   private final CheckoutService checkoutService;
 private final PurchaseService purchaseService;
 
-
   @Autowired
-  public CheckoutController(CheckoutService checkoutService) {
+  public CheckoutController(CheckoutService checkoutService, PurchaseService purchaseService) {
     this.checkoutService = checkoutService;
+    this.purchaseService = purchaseService;
   }
 
   @GetMapping(value = "/shipment", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -48,6 +51,11 @@ private final PurchaseService purchaseService;
   @PostMapping(value = "/billing")
   public ResponseEntity<BillingResponse> addAddress(@RequestBody BillingInfoDto billingInfoDto) {
     return ResponseEntity.ok(checkoutService.addBilling(billingInfoDto));
+  }
+
+  @PostMapping("/request-gateway")
+  public ResponseEntity<RequestPaymentResponse> requestGateway(@RequestBody RequestPaymentDto dto) {
+    return ResponseEntity.ok(purchaseService.generatePayment(dto));
   }
 
 }

@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface ColorRepository extends JpaRepository<Color, Integer> {
   Color getByCod(Long cod);
 
+  Color findByColor(String color);
 }

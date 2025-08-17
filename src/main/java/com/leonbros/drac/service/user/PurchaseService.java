@@ -1,0 +1,138 @@
+package com.leonbros.drac.service.user;
+
+import com.github.f4b6a3.uuid.UuidCreator;
+import com.leonbros.drac.dto.external.request.AddressDto;
+import com.leonbros.drac.dto.external.request.BillingDetailsDto;
+import com.leonbros.drac.dto.external.request.CustomerDto;
+import com.leonbros.drac.dto.external.request.PaymentObjectRequest;
+import com.leonbros.drac.dto.request.checkout.RequestPaymentDto;
+import com.leonbros.drac.dto.external.response.PaymentObjectResponse;
+import com.leonbros.drac.dto.response.cart.CartItemResponse;
+import com.leonbros.drac.dto.response.checkout.RequestPaymentResponse;
+import com.leonbros.drac.entity.cart.Cart;
+import com.leonbros.drac.entity.item.Color;
+import com.leonbros.drac.entity.item.Item;
+import com.leonbros.drac.entity.item.Size;
+import com.leonbros.drac.entity.payment.PaymentElement;
+import com.leonbros.drac.entity.payment.PaymentStatusValues;
+import com.leonbros.drac.entity.payment.PaymentTransaction;
+import com.leonbros.drac.entity.user.User;
+import com.leonbros.drac.repository.CartRepository;
+import com.leonbros.drac.repository.ColorRepository;
+import com.leonbros.drac.repository.ItemRepository;
+import com.leonbros.drac.repository.PaymentTransactionRepository;
+import com.leonbros.drac.repository.SizeRepository;
+import com.leonbros.drac.security.AuthUtils;
+import com.leonbros.drac.service.CartService;
+import com.leonbros.drac.service.ExternalApiService;
+import lombok.extern.apachecommons.CommonsLog;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+@CommonsLog
+@Service
+public class PurchaseService {
+
+  private final ExternalApiService externalApiService;
+
+  private final ItemRepository itemRepository;
+  private final SizeRepository sizeRepository;
+  private final ColorRepository colorRepository;
+  private final CartRepository cartRepository;
+  private final PaymentTransactionRepository paymentTransactionRepository;
+
+  @Autowired
+  public PurchaseService(ExternalApiService externalApiService, ItemRepository itemRepository,
+      SizeRepository sizeRepository, ColorRepository colorRepository, CartRepository cartRepository,
+      PaymentTransactionRepository paymentTransactionRepository) {
+    this.externalApiService = externalApiService;
+    this.itemRepository = itemRepository;
+    this.sizeRepository = sizeRepository;
+    this.colorRepository = colorRepository;
+    this.cartRepository = cartRepository;
+    this.paymentTransactionRepository = paymentTransactionRepository;
+  }
+
+  @Transactional
+  public RequestPaymentResponse generatePayment(RequestPaymentDto dto) {
+    final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (!AuthUtils.isUserAuthenticated(auth)) {
+      return new RequestPaymentResponse(RequestPaymentResponse.Status.NON_AUTHENTICATED, null);
+    }
+    final Optional<Cart> cartOptional = cartRepository.findCartByCod(dto.getCart().getId());
+    if (cartOptional.isEmpty()) {
+      return new RequestPaymentResponse(RequestPaymentResponse.Status.CART_NOT_FOUND, null);
+    }
+    final Cart cart = cartOptional.get();
+    final User user = cart.getUser();
+
+    if (!auth.getName().equals(user.getEmail())) {
+      return new RequestPaymentResponse(RequestPaymentResponse.Status.UNAUTHORIZED, null);
+    }
+
+    final PaymentObjectResponse paymentObjectResponse;
+    try {
+      paymentObjectResponse =
+          externalApiService.generatePaymentGateway(generateRequestPayload(user, cart, dto));
+    } catch (ExternalApiService.Non2xxException e) {
+      return new RequestPaymentResponse(RequestPaymentResponse.Status.EXTERNAL_API_ERROR, null);
+    }
+
+    if (!paymentObjectResponse.getNextAction().mustRedirect()) {
+      return new RequestPaymentResponse(RequestPaymentResponse.Status.UNEXPECTED_ERROR, null);
+    }
+    persistTransaction(dto, user, paymentObjectResponse.getOrderId());
+    return new RequestPaymentResponse(RequestPaymentResponse.Status.REDIRECT,
+        paymentObjectResponse.getNextAction().redirectUrl());
+  }
+
+  private static PaymentObjectRequest generateRequestPayload(User user, Cart cart,
+      RequestPaymentDto dto) {
+    // Customer DTO
+    final CustomerDto customerDto =
+        new CustomerDto(user.getLastName().concat(", ").concat(user.getFirstName()),
+            user.getEmail(), user.getTelephone());
+
+    // Billing Details Dto.
+    BillingDetailsDto billingDetailsDto = null;
+    if (dto.isRequestBilling()) {
+      billingDetailsDto = new BillingDetailsDto(dto.getBillingInfo().getEntityName(),
+          new AddressDto("ES", dto.getBillingAddress().getCity(),
+              dto.getBillingAddress().getStreet(), dto.getBillingAddress().getZip()));
+    }
+    // Price
+    final int totalPrice = BigDecimal.valueOf(CartService.CheckoutPrices.of(cart.getCartItems(),
+            RequestPaymentDto.ShipmentTypes.DIRECTION.equals(dto.getType())).total()).movePointRight(2)
+        .intValue();
+    // Build object
+    return new PaymentObjectRequest(totalPrice, "EUR", UuidCreator.getTimeOrderedEpoch().toString(),
+        "Drac de Ribes: Botiga Online", customerDto, billingDetailsDto,
+        "https://example.com/checkout/callback", "https://example.com/checkout/complete",
+        "https://example.com/checkout/cancel", "ca");
+  }
+
+  public void persistTransaction(RequestPaymentDto dto, User user, String transactionIdentifier) {
+    final List<PaymentElement> paymentElements = new ArrayList<>();
+    final PaymentTransaction result =
+        new PaymentTransaction(null, transactionIdentifier, new Date(),
+            PaymentStatusValues.PENDING.getStatus(), user, paymentElements);
+    for (CartItemResponse itemDto : dto.getCart().getItems()) {
+      final Color color = colorRepository.findByColor(itemDto.getSelectedColor());
+      final Size size = sizeRepository.findBySize(itemDto.getSelectedSize());
+      final Item item = itemRepository.findByCod(itemDto.getId());
+      final Integer quantity = itemDto.getQuantity();
+      paymentElements.add(new PaymentElement(null, result, item, size, color, quantity));
+    }
+    paymentTransactionRepository.save(result);
+  }
+
+}

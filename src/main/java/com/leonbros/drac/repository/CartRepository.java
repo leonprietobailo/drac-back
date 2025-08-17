@@ -12,4 +12,5 @@ public interface CartRepository extends JpaRepository<Cart,Long> {
   Optional<Cart> findCartByUser_Email(String userEmail);
 
   Cart findCartByToken(String token);
+
 }

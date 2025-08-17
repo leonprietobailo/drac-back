@@ -114,8 +114,8 @@ public class CartService {
     // TODO: Find a better integration for the total computation.
     final CheckoutPrices prices = CheckoutPrices.of(cartItems, true);
     return new CartResponse(CartResponse.Status.SUCCESS,
-        new CartDto(prices.subtotal(), prices.shipment(), prices.total(), prices.totalNoVat(),
-            computeCartItems(cartItems)));
+        new CartDto(cart.getCod(), prices.subtotal(), prices.shipment(), prices.total(),
+            prices.totalNoVat(), computeCartItems(cartItems)));
   }
 
   private List<CartItemResponse> computeCartItems(List<CartItem> cartItems) {
@@ -200,7 +200,7 @@ public class CartService {
     response.addHeader("Set-Cookie", cookie.toString());
   }
 
-  private record CheckoutPrices(double subtotal, double shipment, double total, double totalNoVat) {
+  public record CheckoutPrices(double subtotal, double shipment, double total, double totalNoVat) {
 
     private static final BigDecimal VAT = new BigDecimal("0.21");
 
