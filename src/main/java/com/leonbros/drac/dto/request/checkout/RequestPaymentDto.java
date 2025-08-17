@@ -23,6 +23,6 @@ public class RequestPaymentDto {
   private CartDto cart;
 
   public enum ShipmentTypes {
-    POINT, DIRECTION;
+    POINT, ADDRESS;
   }
 }

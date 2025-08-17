@@ -87,9 +87,9 @@ public class PurchaseService {
       return new RequestPaymentResponse(RequestPaymentResponse.Status.EXTERNAL_API_ERROR, null);
     }
 
-    if (!paymentObjectResponse.getNextAction().mustRedirect()) {
-      return new RequestPaymentResponse(RequestPaymentResponse.Status.UNEXPECTED_ERROR, null);
-    }
+//    if (!paymentObjectResponse.getNextAction().mustRedirect()) {
+//      return new RequestPaymentResponse(RequestPaymentResponse.Status.UNEXPECTED_ERROR, null);
+//    }
     persistTransaction(dto, user, paymentObjectResponse.getOrderId());
     return new RequestPaymentResponse(RequestPaymentResponse.Status.REDIRECT,
         paymentObjectResponse.getNextAction().redirectUrl());
@@ -111,7 +111,7 @@ public class PurchaseService {
     }
     // Price
     final int totalPrice = BigDecimal.valueOf(CartService.CheckoutPrices.of(cart.getCartItems(),
-            RequestPaymentDto.ShipmentTypes.DIRECTION.equals(dto.getType())).total()).movePointRight(2)
+            RequestPaymentDto.ShipmentTypes.ADDRESS.equals(dto.getType())).total()).movePointRight(2)
         .intValue();
     // Build object
     return new PaymentObjectRequest(totalPrice, "EUR", UuidCreator.getTimeOrderedEpoch().toString(),

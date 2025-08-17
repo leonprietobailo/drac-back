@@ -1,10 +1,12 @@
 package com.leonbros.drac.dto.external.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PaymentObjectRequest {
   private Integer amount;
   private String currency;
