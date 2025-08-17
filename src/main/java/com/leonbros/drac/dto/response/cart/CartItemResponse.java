@@ -16,7 +16,7 @@ public class CartItemResponse {
   private String selectedColor;
   private String selectedSize;
   private int quantity;
-  private String price;
+  private double price;
   private List<String> colors;
   private List<String> sizes;
 }

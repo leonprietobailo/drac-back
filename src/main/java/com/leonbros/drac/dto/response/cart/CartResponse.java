@@ -9,11 +9,9 @@ import java.util.List;
 @AllArgsConstructor
 public class CartResponse {
 
-  public Status status;
-  public String subtotal;
-  public String shipment;
-  public String total;
-  public List<CartItemResponse> items;
+  private Status status;
+
+  private CartDto cart;
 
   public enum Status {
     SUCCESS,

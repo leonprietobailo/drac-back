@@ -18,13 +18,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/users")
-public class UsersController {
+@RequestMapping("api/checkout")
+public class CheckoutController {
 
   private final CheckoutService checkoutService;
+private final PurchaseService purchaseService;
+
 
   @Autowired
-  public UsersController(CheckoutService checkoutService) {
+  public CheckoutController(CheckoutService checkoutService) {
     this.checkoutService = checkoutService;
   }
 

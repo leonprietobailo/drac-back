@@ -21,7 +21,7 @@ public class ItemsResponse {
     private Long position;
     private String title;
     private String description;
-    private String  price;
+    private double  price;
     private List<ItemColorResponse> colors;
     private List<ItemSizeResponse> sizes;
     private List<ItemImageResponse> images;

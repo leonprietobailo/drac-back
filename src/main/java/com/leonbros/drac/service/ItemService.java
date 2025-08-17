@@ -41,7 +41,7 @@ public class ItemService {
     for (Item item : items) {
       result.add(
           new ItemsResponse.ItemResponse(item.getCod(), item.getItemPosition(), item.getTitle(),
-              item.getDescription(), String.format("%.2f", item.getPrice()).replace(".", ","),
+              item.getDescription(), item.getPrice(),
               computeColors(item.getItemColors()), computeSizes(item.getItemSizes()),
               computeImages(item.getItemImages())));
     }

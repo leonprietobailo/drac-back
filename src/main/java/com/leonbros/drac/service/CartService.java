@@ -3,6 +3,7 @@ package com.leonbros.drac.service;
 import com.leonbros.drac.dto.request.cart.AddRequest;
 import com.leonbros.drac.dto.request.cart.DeleteRequest;
 import com.leonbros.drac.dto.response.cart.AddResponse;
+import com.leonbros.drac.dto.response.cart.CartDto;
 import com.leonbros.drac.dto.response.cart.CartItemResponse;
 import com.leonbros.drac.dto.response.cart.CartResponse;
 import com.leonbros.drac.dto.response.cart.DeleteResponse;
@@ -16,13 +17,13 @@ import com.leonbros.drac.entity.item.Size;
 import com.leonbros.drac.repository.CartItemRepository;
 import com.leonbros.drac.repository.CartRepository;
 import com.leonbros.drac.repository.ColorRepository;
-import com.leonbros.drac.repository.ItemColorRepository;
 import com.leonbros.drac.repository.ItemRepository;
 import com.leonbros.drac.repository.SizeRepository;
 import com.leonbros.drac.repository.UserRepository;
 import com.leonbros.drac.service.utils.ServiceUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
@@ -33,6 +34,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -109,13 +112,10 @@ public class CartService {
     final Cart cart = getOrCreateCart(req, resp);
     final List<CartItem> cartItems = cart.getCartItems();
     // TODO: Find a better integration for the total computation.
-    final double subtotal = cartItems.stream()
-        .mapToDouble(cartItem -> cartItem.getQuantity() * cartItem.getItem().getPrice()).sum();
-    final double shipment = 5;
-    final double total = subtotal + shipment;
-    return new CartResponse(CartResponse.Status.SUCCESS, String.format("%.2f €", subtotal),
-        String.format("%.2f €", shipment), String.format("%.2f €", total),
-        computeCartItems(cartItems));
+    final CheckoutPrices prices = CheckoutPrices.of(cartItems, true);
+    return new CartResponse(CartResponse.Status.SUCCESS,
+        new CartDto(prices.subtotal(), prices.shipment(), prices.total(), prices.totalNoVat(),
+            computeCartItems(cartItems)));
   }
 
   private List<CartItemResponse> computeCartItems(List<CartItem> cartItems) {
@@ -146,10 +146,8 @@ public class CartService {
       final String selectedSize =
           Optional.ofNullable(item.getSelectedSize()).map(Size::getSize).orElse(null);
       final int quantity = item.getQuantity();
-      final String price = String.format("%.2f €", item.getItem().getPrice());
-      result.add(
-          new CartItemResponse(id, itemId, url, title, selectedColor, selectedSize, quantity, price,
-              colors, sizes));
+      result.add(new CartItemResponse(id, itemId, url, title, selectedColor, selectedSize, quantity,
+          item.getItem().getPrice(), colors, sizes));
     }
     return result;
   }
@@ -200,6 +198,21 @@ public class CartService {
         ResponseCookie.from(CART_COOKIE, token).httpOnly(true).secure(true).sameSite("Lax")
             .path("/").maxAge(Duration.ofDays(30)).build();
     response.addHeader("Set-Cookie", cookie.toString());
+  }
+
+  private record CheckoutPrices(double subtotal, double shipment, double total, double totalNoVat) {
+
+    private static final BigDecimal VAT = new BigDecimal("0.21");
+
+    public static CheckoutPrices of(List<CartItem> cartItems, boolean isShipped) {
+      final double subtotal = cartItems.stream()
+          .mapToDouble(cartItem -> cartItem.getQuantity() * cartItem.getItem().getPrice()).sum();
+      final double shipment = isShipped ? 5 : 0;
+      final double total = subtotal + shipment;
+      final double totalNoVat = new BigDecimal(total).multiply(new BigDecimal(1).subtract(VAT))
+          .setScale(2, RoundingMode.HALF_EVEN).doubleValue();
+      return new CheckoutPrices(subtotal, shipment, total, totalNoVat);
+    }
   }
 
 }
