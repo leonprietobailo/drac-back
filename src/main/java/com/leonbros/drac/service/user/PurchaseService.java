@@ -5,6 +5,9 @@ import com.leonbros.drac.dto.external.request.AddressDto;
 import com.leonbros.drac.dto.external.request.BillingDetailsDto;
 import com.leonbros.drac.dto.external.request.CustomerDto;
 import com.leonbros.drac.dto.external.request.PaymentObjectRequest;
+import com.leonbros.drac.dto.external.revolut.request.Customer;
+import com.leonbros.drac.dto.external.revolut.request.OrderBody;
+import com.leonbros.drac.dto.external.revolut.response.OrderResponse;
 import com.leonbros.drac.dto.request.checkout.RequestPaymentDto;
 import com.leonbros.drac.dto.external.response.PaymentObjectResponse;
 import com.leonbros.drac.dto.response.cart.CartItemResponse;
@@ -25,6 +28,7 @@ import com.leonbros.drac.repository.SizeRepository;
 import com.leonbros.drac.security.AuthUtils;
 import com.leonbros.drac.service.CartService;
 import com.leonbros.drac.service.ExternalApiService;
+import com.leonbros.drac.service.RevolutApiService;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -42,7 +46,7 @@ import java.util.Optional;
 @Service
 public class PurchaseService {
 
-  private final ExternalApiService externalApiService;
+  private final RevolutApiService revolutApiService;
 
   private final ItemRepository itemRepository;
   private final SizeRepository sizeRepository;
@@ -51,10 +55,10 @@ public class PurchaseService {
   private final PaymentTransactionRepository paymentTransactionRepository;
 
   @Autowired
-  public PurchaseService(ExternalApiService externalApiService, ItemRepository itemRepository,
+  public PurchaseService(RevolutApiService revolutApiService, ItemRepository itemRepository,
       SizeRepository sizeRepository, ColorRepository colorRepository, CartRepository cartRepository,
       PaymentTransactionRepository paymentTransactionRepository) {
-    this.externalApiService = externalApiService;
+    this.revolutApiService = revolutApiService;
     this.itemRepository = itemRepository;
     this.sizeRepository = sizeRepository;
     this.colorRepository = colorRepository;
@@ -79,22 +83,23 @@ public class PurchaseService {
       return new RequestPaymentResponse(RequestPaymentResponse.Status.UNAUTHORIZED, null);
     }
 
-    final PaymentObjectResponse paymentObjectResponse;
+    final OrderResponse orderResponse;
     try {
-      paymentObjectResponse =
-          externalApiService.generatePaymentGateway(generateRequestPayload(user, cart, dto));
-    } catch (ExternalApiService.Non2xxException e) {
+      orderResponse = revolutApiService.generatePaymentGateway(generateOrderBody(user, cart, dto));
+    } catch (RevolutApiService.Non2xxException e) {
       return new RequestPaymentResponse(RequestPaymentResponse.Status.EXTERNAL_API_ERROR, null);
     }
 
-//    if (!paymentObjectResponse.getNextAction().mustRedirect()) {
-//      return new RequestPaymentResponse(RequestPaymentResponse.Status.UNEXPECTED_ERROR, null);
-//    }
-    persistTransaction(dto, user, paymentObjectResponse.getOrderId());
+    //    if (!orderResponse.getNextAction().mustRedirect()) {
+    //      return new RequestPaymentResponse(RequestPaymentResponse.Status.UNEXPECTED_ERROR, null);
+    //    }
+    //    persistTransaction(dto, user, orderResponse.getOrderId());
     return new RequestPaymentResponse(RequestPaymentResponse.Status.REDIRECT,
-        paymentObjectResponse.getNextAction().redirectUrl());
+        orderResponse.getCheckout_url());
   }
 
+  // Deprecated Monei, see what to do with this.
+  @Deprecated
   private static PaymentObjectRequest generateRequestPayload(User user, Cart cart,
       RequestPaymentDto dto) {
     // Customer DTO
@@ -118,6 +123,17 @@ public class PurchaseService {
         "Drac de Ribes: Botiga Online", customerDto, billingDetailsDto,
         "https://example.com/checkout/callback", "https://example.com/checkout/complete",
         "https://example.com/checkout/cancel", "ca");
+  }
+
+  private static OrderBody generateOrderBody(User user, Cart cart, RequestPaymentDto dto) {
+    final Customer customerDto =
+        new Customer(null, String.format("%s, %s", user.getFirstName(), user.getLastName()),
+            user.getTelephone(), user.getEmail());
+    final int totalPrice = BigDecimal.valueOf(CartService.CheckoutPrices.of(cart.getCartItems(),
+            RequestPaymentDto.ShipmentTypes.ADDRESS.equals(dto.getType())).total()).movePointRight(2)
+        .intValue();
+    return new OrderBody(totalPrice, "EUR", "Drac de Ribes: Compra online", user.getEmail(),
+        user.getBirthdate(), OrderBody.EnforceChallengeValues.AUTOMATIC);
   }
 
   public void persistTransaction(RequestPaymentDto dto, User user, String transactionIdentifier) {
