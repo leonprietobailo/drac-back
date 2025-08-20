@@ -1,0 +1,9 @@
+package com.leonbros.drac.dto.request.webhook;
+
+public record RevolutRequest(Event event, String order_id, String merchant_order_ext_ref) {
+
+  public enum Event {
+    ORDER_COMPLETED, ORDER_AUTHORISED, ORDER_CANCELLED, ORDER_PAYMENT_AUTHENTICATED, ORDER_PAYMENT_DECLINED, ORDER_PAYMENT_FAILED, PAYOUT_INITIATED, PAYOUT_COMPLETED, PAYOUT_FAILED, DISPUTE_ACTION_REQUIRED, DISPUTE_UNDER_REVIEW, DISPUTE_WON, DISPUTE_LOST;
+  }
+
+}

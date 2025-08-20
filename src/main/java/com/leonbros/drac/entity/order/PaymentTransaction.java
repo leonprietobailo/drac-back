@@ -1,10 +1,5 @@
-package com.leonbros.drac.entity.payment;
+package com.leonbros.drac.entity.order;
 
-import com.leonbros.drac.entity.cart.Cart;
-import com.leonbros.drac.entity.cart.CartItem;
-import com.leonbros.drac.entity.item.Color;
-import com.leonbros.drac.entity.item.Item;
-import com.leonbros.drac.entity.item.Size;
 import com.leonbros.drac.entity.user.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -14,7 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,7 +39,6 @@ public class PaymentTransaction {
   @JoinColumn(name = "user_cod")
   private User user;
 
-  @OneToMany(mappedBy = "paymentTransaction", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<PaymentElement> paymentElements;
-
+  @OneToOne(mappedBy = "paymentTransaction", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Order order;
 }

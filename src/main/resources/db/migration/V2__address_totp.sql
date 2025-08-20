@@ -13,6 +13,6 @@ CREATE TABLE TOTP
 (
     cod          BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     email        VARCHAR2(100)                     NOT NULL,
-    otp          NUMERIC(4, 0)                     NOT NULL,
+    otp          CHAR(4)                           NOT NULL,
     request_date TIMESTAMP                         NOT NULL
 );

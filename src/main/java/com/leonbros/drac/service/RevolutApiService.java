@@ -2,42 +2,46 @@ package com.leonbros.drac.service;
 
 import com.leonbros.drac.dto.external.request.PaymentObjectRequest;
 import com.leonbros.drac.dto.external.response.PaymentObjectResponse;
+import com.leonbros.drac.dto.external.revolut.request.OrderBody;
+import com.leonbros.drac.dto.external.revolut.response.OrderResponse;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @Service
-@Deprecated
-public class ExternalApiService {
+public class RevolutApiService {
 
   private final String authToken;
   private final RestTemplate restTemplate;
 
-  public ExternalApiService(@Value("${monei.secret}") String authToken, RestTemplate restTemplate) {
+  public RevolutApiService(@Value("${revolut.secret}") String authToken, RestTemplate restTemplate) {
     this.authToken = authToken;
     this.restTemplate = restTemplate;
   }
 
-  private static final String MONEI_URL = "https://api.monei.com/v1/payments";
+  private static final String REVOLUT_URL = "https://sandbox-merchant.revolut.com/api/orders";
 
-  public PaymentObjectResponse generatePaymentGateway(PaymentObjectRequest payload)
+  public OrderResponse generatePaymentGateway(OrderBody payload)
       throws Non2xxException {
     // Headers
     final HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set(HttpHeaders.AUTHORIZATION, authToken);
+    headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+    headers.setBearerAuth(authToken);
+    headers.set("Revolut-Api-Version", "2024-09-01");
     // Entity
-    final HttpEntity<PaymentObjectRequest> request = new HttpEntity<>(payload, headers);
+    final HttpEntity<OrderBody> request = new HttpEntity<>(payload, headers);
     // Send Request
-    final ResponseEntity<PaymentObjectResponse> response =
-        restTemplate.postForEntity(MONEI_URL, request, PaymentObjectResponse.class);
+    final ResponseEntity<OrderResponse> response =
+        restTemplate.postForEntity(REVOLUT_URL, request, OrderResponse.class);
     if (!response.getStatusCode().is2xxSuccessful()) {
       throw new Non2xxException(response.getStatusCode(), response.getHeaders(),
           asStringSafe(response.getBody()));
@@ -45,7 +49,7 @@ public class ExternalApiService {
     return response.getBody();
   }
 
-  private static String asStringSafe(PaymentObjectResponse body) {
+  private static String asStringSafe(OrderResponse body) {
     return body == null ? null : body.toString(); // or serialize to JSON
   }
 

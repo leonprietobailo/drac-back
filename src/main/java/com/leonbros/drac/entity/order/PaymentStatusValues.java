@@ -1,12 +1,10 @@
-package com.leonbros.drac.entity.payment;
+package com.leonbros.drac.entity.order;
 
 import lombok.Getter;
 
 @Getter
 public enum PaymentStatusValues {
-  PENDING("P"),
-  CANCELLED("C"),
-  SUCCEEDED("S");
+  PENDING("PENDING");
 
   private final String status;
 
