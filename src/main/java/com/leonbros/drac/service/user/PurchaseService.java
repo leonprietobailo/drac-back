@@ -70,32 +70,36 @@ public class PurchaseService {
   public RequestPaymentResponse generatePayment(RequestPaymentDto dto) {
     final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     if (!AuthUtils.isUserAuthenticated(auth)) {
-      return new RequestPaymentResponse(RequestPaymentResponse.Status.NON_AUTHENTICATED, null);
+      return new RequestPaymentResponse(RequestPaymentResponse.Status.NON_AUTHENTICATED, null, null);
     }
     final Optional<Cart> cartOptional = cartRepository.findCartByCod(dto.getCart().getId());
     if (cartOptional.isEmpty()) {
-      return new RequestPaymentResponse(RequestPaymentResponse.Status.CART_NOT_FOUND, null);
+      return new RequestPaymentResponse(RequestPaymentResponse.Status.CART_NOT_FOUND, null, null);
     }
     final Cart cart = cartOptional.get();
     final User user = cart.getUser();
 
     if (!auth.getName().equals(user.getEmail())) {
-      return new RequestPaymentResponse(RequestPaymentResponse.Status.UNAUTHORIZED, null);
+      return new RequestPaymentResponse(RequestPaymentResponse.Status.UNAUTHORIZED, null, null);
     }
 
     final OrderResponse orderResponse;
     try {
       orderResponse = revolutApiService.generatePaymentGateway(generateOrderBody(user, cart, dto));
     } catch (RevolutApiService.Non2xxException e) {
-      return new RequestPaymentResponse(RequestPaymentResponse.Status.EXTERNAL_API_ERROR, null);
+      return new RequestPaymentResponse(RequestPaymentResponse.Status.EXTERNAL_API_ERROR, null, null);
     }
 
     //    if (!orderResponse.getNextAction().mustRedirect()) {
     //      return new RequestPaymentResponse(RequestPaymentResponse.Status.UNEXPECTED_ERROR, null);
     //    }
-    //    persistTransaction(dto, user, orderResponse.getOrderId());
+    //    persistTransaction(dto, user, orderResponse.getOrderId())
+    //
+    //    ;
+    persistTransaction(dto, user, orderResponse.getId());
+
     return new RequestPaymentResponse(RequestPaymentResponse.Status.REDIRECT,
-        orderResponse.getCheckout_url());
+        orderResponse.getCheckout_url(), orderResponse.getToken());
   }
 
   // Deprecated Monei, see what to do with this.

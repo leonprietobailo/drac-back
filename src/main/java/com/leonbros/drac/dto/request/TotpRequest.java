@@ -10,4 +10,6 @@ public class TotpRequest {
   @NotBlank
   @Email
   private String email;
+
+  private String firstName;
 }
