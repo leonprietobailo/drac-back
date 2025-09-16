@@ -288,3 +288,5 @@ INSERT INTO RECIPIENT(user_cod, FIRSTNAME, surname,  telephone, starred) VALUES 
 
 INSERT INTO ADDRESS(USER_COD, CITY, PROVINCE, STREET, FLAT, POSTAL_CODE) VALUES
 (6, 'Can Trabal', 'Barcelona', 'Carrer Sant Pere de Ribes 148', NULL, '08734');
+
+INSERT INTO BILLING_INFO(USER_COD, ENTITY_NAME, EMAIL, TAX_ID, STARRED) VALUES ( 6, 'LEPRIETO', 'contact@leonprieto.com', 'TEST123', false );

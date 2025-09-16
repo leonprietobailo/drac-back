@@ -13,6 +13,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.Path;
+
 @Slf4j
 @Component
 @Getter
@@ -40,7 +42,7 @@ public class AppMailSender implements EmailGateway {
 
   @Override
   @Async("mailExecutor")
-  public void sendHtmlMail(String to, String subject, String htmlBody) {
+  public void sendHtmlMail(String to, String subject, String htmlBody, Path... attachments) {
     try {
       final MimeMessage mimeMessage = mailSender.createMimeMessage();
       final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
@@ -48,6 +50,9 @@ public class AppMailSender implements EmailGateway {
       helper.setTo(to);
       helper.setSubject(subject);
       helper.setText(htmlBody, true);
+      for (Path attachment : attachments) {
+        helper.addAttachment(attachment.getFileName().toString(), attachment.toFile());
+      }
       mailSender.send(mimeMessage);
     } catch (MessagingException e) {
       log.error("Failed to send HTML email from={} to={} subject={}. Error: {}", from, to, subject,

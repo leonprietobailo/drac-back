@@ -49,7 +49,7 @@ public class RevolutApiService {
     return response.getBody();
   }
 
-  private static String asStringSafe(OrderResponse body) {
+  public static String asStringSafe(OrderResponse body) {
     return body == null ? null : body.toString(); // or serialize to JSON
   }
 

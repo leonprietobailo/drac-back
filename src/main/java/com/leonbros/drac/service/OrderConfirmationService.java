@@ -11,18 +11,16 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -33,7 +31,7 @@ import java.util.stream.Stream;
 
 @Slf4j
 @Service
-public class EmailOrderConfirmationService {
+public class OrderConfirmationService {
 
   private static final String ORDER_EMAIL_TEMPLATE = "order_email.ftl";
 
@@ -43,7 +41,7 @@ public class EmailOrderConfirmationService {
   private final PaymentTransactionRepository paymentTransactionRepository;
 
   @Autowired
-  public EmailOrderConfirmationService(@Qualifier("provideConfig") Configuration config,
+  public OrderConfirmationService(@Qualifier("provideConfig") Configuration config,
       EmailGateway emailGateway, PaymentTransactionRepository paymentTransactionRepository) {
     this.config = config;
     this.emailGateway = emailGateway;
@@ -51,7 +49,7 @@ public class EmailOrderConfirmationService {
   }
 
   @Transactional(readOnly = true)
-  public void sendOrderConfirmationEmail(String orderId) {
+  public void sendOrderConfirmationEmail(String orderId, Optional<Path> invoice) {
     final Optional<PaymentTransaction> transactionOptional =
         paymentTransactionRepository.findByIdentifier(orderId);
     if (transactionOptional.isEmpty()) {
@@ -66,7 +64,7 @@ public class EmailOrderConfirmationService {
       final StringWriter sw = new StringWriter();
       template.process(dto, sw);
       emailGateway.sendHtmlMail(paymentTransaction.getUser().getEmail(), "Confirmació de compra.",
-          sw.toString());
+          sw.toString(), invoice.orElse(null));
     } catch (IOException e) {
       log.error("Failed to retrieve template. : {}. Order Id: {} Exception Message: {}",
           ORDER_EMAIL_TEMPLATE, dto.getOrderId(), e.getMessage(), e);
@@ -111,8 +109,8 @@ public class EmailOrderConfirmationService {
     }
 
     public static Dto of(PaymentTransaction paymentTransaction) {
-        final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-       final NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.of("ca", "ES"));
+      final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+      final NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.of("ca", "ES"));
       return new Dto(paymentTransaction.getUser().getFirstName(),
           paymentTransaction.getIdentifier(), sdf.format(new Date()),
           nf.format(paymentTransaction.getOrder().getSubtotal()),
@@ -171,8 +169,6 @@ public class EmailOrderConfirmationService {
         }
         return result;
       }
-
     }
-
   }
 }

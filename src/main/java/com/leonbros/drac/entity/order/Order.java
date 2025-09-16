@@ -56,9 +56,15 @@ public class Order {
   @JoinColumn(name = "billing_address_cod")
   private Address billingAddress;
 
+  private Integer invoiceYear;
+
+  private Integer invoiceNumber;
+
   private Double subtotal;
 
   private Double shipment;
+
+
 
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<OrderElement> orderElements;

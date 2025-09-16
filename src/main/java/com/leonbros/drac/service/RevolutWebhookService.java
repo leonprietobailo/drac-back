@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Path;
 import java.util.Optional;
 
 @Slf4j
@@ -16,12 +17,15 @@ public class RevolutWebhookService {
 
   private final PaymentTransactionRepository paymentTransactionRepository;
 
-  private final EmailOrderConfirmationService emailOrderConfirmationService;
+  private final InvoiceGenerationService invoiceGenerationService;
+  private final OrderConfirmationService emailOrderConfirmationService;
 
   @Autowired
   public RevolutWebhookService(PaymentTransactionRepository paymentTransactionRepository,
-      EmailOrderConfirmationService emailOrderConfirmationService) {
+      InvoiceGenerationService invoiceGenerationService,
+      OrderConfirmationService emailOrderConfirmationService) {
     this.paymentTransactionRepository = paymentTransactionRepository;
+    this.invoiceGenerationService = invoiceGenerationService;
     this.emailOrderConfirmationService = emailOrderConfirmationService;
   }
 
@@ -38,11 +42,12 @@ public class RevolutWebhookService {
     paymentTransactionRepository.save(paymentTransaction);
 
     // Generate Billing.
-
+    final Optional<Path> invoice =
+        invoiceGenerationService.generateInvoiceIfRequired(transaction.get().getIdentifier());
     // Generate Email.
-    emailOrderConfirmationService.sendOrderConfirmationEmail(transaction.get().getIdentifier());
+    emailOrderConfirmationService.sendOrderConfirmationEmail(transaction.get().getIdentifier(),
+        invoice);
   }
-
 
 
 

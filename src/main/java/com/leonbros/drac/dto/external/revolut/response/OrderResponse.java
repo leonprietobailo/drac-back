@@ -2,6 +2,8 @@ package com.leonbros.drac.dto.external.revolut.response;
 
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 public class OrderResponse {
   private String id;
@@ -16,4 +18,5 @@ public class OrderResponse {
   private String captureMode;
   private String checkout_url;
   private String enforceChallenge;
+  private List<PaymentResponse> payments;
 }

@@ -161,8 +161,8 @@ public class PurchaseService {
   private PaymentTransaction computePaymentTransaction(RequestPaymentDto dto, User user, Cart cart,
       String transactionIdentifier) {
     final PaymentTransaction transaction =
-        new PaymentTransaction(null, transactionIdentifier, new Date(),
-            PaymentStatusValues.PENDING.getStatus(), user, null);
+        PaymentTransaction.builder().identifier(transactionIdentifier).createdAt(new Date())
+            .status(PaymentStatusValues.PENDING.getStatus()).user(user).build();
     final Recipient recipient =
         recipientRepository.findByCodAndUserCod_Email(dto.getRecipient().getId(), user.getEmail());
     final Address shippingAddress =
@@ -180,7 +180,8 @@ public class PurchaseService {
         dto.getType().equals(RequestPaymentDto.ShipmentTypes.ADDRESS));
     final Order order =
         new Order(null, transaction, dto.getType().toString(), shippingAddress, recipient,
-            billingInfo, billingAddress, prices.subtotal(), prices.shipment(), new ArrayList<>());
+            billingInfo, billingAddress, null, null, prices.subtotal(), prices.shipment(),
+            new ArrayList<>());
     transaction.setOrder(order);
     for (CartItemResponse itemDto : dto.getCart().getItems()) {
       final Color color = colorRepository.findByColor(itemDto.getSelectedColor());

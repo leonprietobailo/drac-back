@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class PaymentTransaction {
 
   @Id
@@ -34,6 +36,10 @@ public class PaymentTransaction {
   private Date createdAt;
 
   private String status;
+
+  private String paymentId;
+
+  private String paymentMethod;
 
   @ManyToOne
   @JoinColumn(name = "user_cod")
